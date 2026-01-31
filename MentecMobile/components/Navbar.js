@@ -1,0 +1,57 @@
+import { Text, View, StyleSheet, Image,Pressable, Alert} from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Octicons from '@expo/vector-icons/Octicons';
+import Fontisto from '@expo/vector-icons/Fontisto';
+
+export default function NavBar({navigation}) {
+
+  const handlePress = (message) => {
+    alert(message);
+  };
+
+  return (
+    <View style={styles.containerNavBar}>
+    
+      <Pressable  onPress={() => navigation.navigate('Inicio')} >
+        <MaterialCommunityIcons name="home-outline" size={30} color="white" />
+      </Pressable>
+
+      <Pressable  onPress={() => navigation.navigate('Servicos')} >
+        <Fontisto name="nav-icon-grid" size={22} color="white" />
+      </Pressable>
+
+      <Pressable  onPress={() => navigation.navigate('perfil')} >
+        <Octicons name="person" size={26} color="white" />
+      </Pressable>
+
+      <Pressable  onPress={() => navigation.navigate('Feedback')} >
+        <Ionicons name="chatbox-ellipses-outline" size={27} color="white" />
+      </Pressable>
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+ containerNavBar: {
+  position: 'absolute',
+  bottom: 10, // distância do rodapé (pode ajustar)
+  left: 0,
+  right: 0,
+  flexDirection: 'row',
+  backgroundColor: '#770B1C',
+  padding: 8,
+  height: 55,
+  alignItems: 'center',
+  justifyContent: 'space-evenly',
+  borderRadius: 15,
+  marginHorizontal: 20, // deixará ele com bordas laterais
+  elevation: 5, // sombra no Android
+  shadowColor: '#000', // sombra no iOS
+  shadowOpacity: 0.2,
+  shadowOffset: { width: 0, height: 3 },
+  shadowRadius: 4,
+},
+
+});
