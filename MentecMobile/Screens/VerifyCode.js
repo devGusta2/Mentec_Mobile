@@ -41,20 +41,21 @@ export default function VerifyCode({ route, navigation }) {
     //     console.log(payload)
     // }
 
-    const verifyCode = async () => {
+    // Adicione o parâmetro 'receivedCode'
+    const verifyCode = async (receivedCode) => {
         const payload2 = {
             email: data.email,
-            codigo: code
+            codigo: receivedCode || code // Usa o que recebeu ou o estado como backup
         }
 
         try {
-            const response = await axios.post(`${API_URL}/email/verify`, payload2)
-
+            console.log("Enviando para o banco:", payload2);
+            // const response = await axios.post(`${API_URL}/email/verify`, payload2);
+            // navegação de sucesso aqui...
         } catch (e) {
-            alert("Ocorreu algum erro durante o envio do código de verificação: " + e.message || "")
+            alert("Erro na verificação: " + (e.response?.data?.message || e.message));
         }
     }
-
 
 
 
@@ -75,14 +76,17 @@ export default function VerifyCode({ route, navigation }) {
                 </View>
                 <View style={styles.input_code_box}>
                     <TextInput
+                    style={styles.input}
                         onChangeText={text => {
-                            setCode(text);
-                            if (text.length === 6) {
-                                verifyCode();
+                            const numericText = text.replace(/[^0-9]/g, "");
+                            setCode(numericText);
+
+                            if (numericText.length === 6) {
+                                // Passa o numericText (que tem os 6 dígitos) diretamente
+                                verifyCode(numericText);
                             }
                         }}
-
-                        maxLength={6} style={styles.input} placeholderTextColor='white' placeholder="Digite o código de verificação" />
+                    />
                 </View>
                 <View style={styles.button_box}>
                     <TouchableOpacity onPress={requestCode} style={styles.button}>
