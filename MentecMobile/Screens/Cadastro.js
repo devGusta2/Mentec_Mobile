@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import msIcon from '../assets/microsoft.png';
 
-export default function Cadastro() {
+export default function Cadastro({navigation}) {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [matricula, setMatricula] = useState('');
@@ -25,10 +25,19 @@ export default function Cadastro() {
 
     setErros(novosErros);
 
+    const payload = {
+      nome,
+      sobrenome:"21312",
+      email,
+      senha,
+      cpf:"@$3234"
+    };
+        navigation.navigate("VerifyCode", { data: payload });
     if (Object.keys(novosErros).length === 0) {
-      console.log('Cadastro enviado!');
-      console.log({ nome, email, matricula, senha });
-      // Aqui você pode enviar os dados para API ou navegar
+      // console.log('Cadastro enviado!');
+      // console.log({ nome, email, matricula, senha });
+      // // Aqui você pode enviar os dados para API ou navegar
+  
     }
   };
 
@@ -125,6 +134,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    padding:30
   },
   title: {
     color: 'white',

@@ -27,6 +27,10 @@ import Cronograma from './Screens/Cronograma'
 import MaterialApoio from './Screens/MaterialApoio'
 import Feedback from './Screens/feedback'
 
+import VerifyCode from './Screens/VerifyCode';
+
+
+
 const Stack = createNativeStackNavigator();
 
 const Inicio = ({ navigation }) => {
@@ -83,6 +87,7 @@ export default function App() {
         <Stack.Screen name = "Cronograma" component = {Cronograma} /> 
         <Stack.Screen name = "MaterialApoio" component = {MaterialApoio} /> 
         <Stack.Screen name = "Feedback" component = {Feedback} /> 
+        <Stack.Screen name = "VerifyCode" component = {VerifyCode} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
