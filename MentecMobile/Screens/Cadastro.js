@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import msIcon from '../assets/microsoft.png';
 
-export default function Cadastro({navigation}) {
+export default function Cadastro({ navigation }) {
   const [nome, setNome] = useState('');
+  const [sobrenome, setSobrenome] = useState('');
   const [email, setEmail] = useState('');
-  const [matricula, setMatricula] = useState('');
+  const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
   const [repeteSenha, setRepeteSenha] = useState('');
 
@@ -15,30 +16,41 @@ export default function Cadastro({navigation}) {
     let novosErros = {};
 
     if (!nome.trim()) novosErros.nome = 'Preencha o nome.';
+    if (!sobrenome.trim()) novosErros.sobrenome = 'Preencha o sobrenome.';
     if (!email.trim()) novosErros.email = 'Preencha o e-mail.';
-    if (!matricula.trim()) novosErros.matricula = 'Preencha a matrícula.';
+    if (!cpf.trim()) novosErros.cpf = 'Preencha o CPF.';
     if (!senha.trim()) novosErros.senha = 'Preencha a senha.';
     if (!repeteSenha.trim()) novosErros.repeteSenha = 'Repita a senha.';
     if (senha && repeteSenha && senha !== repeteSenha) {
       novosErros.repeteSenha = 'As senhas não coincidem.';
     }
+    if (senha && senha.length < 8) {
+      novosErros.senha = 'A senha deve ter pelo menos 8 caracteres.';
+    }
 
+    // Verificação se as senhas coincidem
+    if (senha && repeteSenha && senha !== repeteSenha) {
+      novosErros.repeteSenha = 'As senhas não coincidem.';
+    }
+
+    // Validação de email (simples: contém @ e .)
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      novosErros.email = 'Digite um e-mail válido.';
+    }
     setErros(novosErros);
 
-    const payload = {
-      nome,
-      sobrenome:"21312",
-      email,
-      senha,
-      cpf:"@$3234"
-    };
-        navigation.navigate("VerifyCode", { data: payload });
+    
     if (Object.keys(novosErros).length === 0) {
-      // console.log('Cadastro enviado!');
-      // console.log({ nome, email, matricula, senha });
-      // // Aqui você pode enviar os dados para API ou navegar
-  
+      const payload = {
+        nome,
+        sobrenome,
+        email,
+        senha,
+        cpf
+      };
+      navigation.navigate("VerifyCode", { data: payload });
     }
+
   };
 
   return (
@@ -58,10 +70,20 @@ export default function Cadastro({navigation}) {
           />
           {erros.nome && <Text style={styles.errorText}>{erros.nome}</Text>}
         </View>
+        <View style={styles.inpt_field}>
+          <TextInput
+            placeholder="Sobrenome:"
+            placeholderTextColor="white"
+            style={styles.inpt_text}
+            value={sobrenome}
+            onChangeText={setSobrenome}
+          />
+          {erros.sobrenome && <Text style={styles.errorText}>{erros.sobrenome}</Text>}
+        </View>
 
         <View style={styles.inpt_field}>
           <TextInput
-            placeholder="E-mail:"
+            placeholder="Digite seu e-mail:"
             placeholderTextColor="white"
             style={styles.inpt_text}
             value={email}
@@ -72,18 +94,18 @@ export default function Cadastro({navigation}) {
 
         <View style={styles.inpt_field}>
           <TextInput
-            placeholder="Matrícula:"
+            placeholder="Digite seu Cpf:"
             placeholderTextColor="white"
             style={styles.inpt_text}
-            value={matricula}
-            onChangeText={setMatricula}
+            value={cpf}
+            onChangeText={setCpf}
           />
-          {erros.matricula && <Text style={styles.errorText}>{erros.matricula}</Text>}
+          {erros.cpf && <Text style={styles.errorText}>{erros.cpf}</Text>}
         </View>
 
         <View style={styles.inpt_field}>
           <TextInput
-            placeholder="Senha:"
+            placeholder="Digite sua senha:"
             placeholderTextColor="white"
             style={styles.inpt_text}
             secureTextEntry
@@ -95,7 +117,7 @@ export default function Cadastro({navigation}) {
 
         <View style={styles.inpt_field}>
           <TextInput
-            placeholder="Repita sua senha:"
+            placeholder="Confirme sua senha:"
             placeholderTextColor="white"
             style={styles.inpt_text}
             secureTextEntry
@@ -134,7 +156,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    padding:30
+    padding: 30
   },
   title: {
     color: 'white',

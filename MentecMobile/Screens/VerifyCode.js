@@ -2,8 +2,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
-
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+
+
+
+const API_URL = "http://localhost:8080"
 
 
 export default function VerifyCode({ route, navigation }) {
@@ -13,28 +17,50 @@ export default function VerifyCode({ route, navigation }) {
     const [code, setCode] = useState("");
 
 
+
     // const {data} = route.params;
     // const codeRequest = async () =>{
+    const payload = {
+        nome: data.nome,
+        destinatario: data.email,
+        senha: data.senha,
+        sobrenome: data.sobrenome,
+        cpf: data.cpf
+    }
+    const requestCode = async () => {
+        try {
+            const response = await axios.post(`${API_URL}/email/check`, payload)
 
-    //     const payload = {
-    //         nome: data.nome,
-    //         destinatario: data.email,
-    //         senha: data.senha,
-    //         sobrenome: data.sobrenome,
-    //         cpf: data.cpf
-    //     }
+        } catch (e) {
+            alert("Ocorreu algum erro durante o envio dos dados: " + e.message || "")
+        }
+    }
+
+
 
     //     console.log(payload)
     // }
 
-    const verifyCode = async () =>{
+    const verifyCode = async () => {
+        const payload2 = {
+            email: data.email,
+            codigo: code
+        }
 
+        try {
+            const response = await axios.post(`${API_URL}/email/verify`, payload2)
+
+        } catch (e) {
+            alert("Ocorreu algum erro durante o envio do código de verificação: " + e.message || "")
+        }
     }
 
 
-    // // useEffect(()=>{
-    // //     codeRequest();
-    // // },[])
+
+
+    useEffect(() => {
+        requestCode();
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -49,11 +75,17 @@ export default function VerifyCode({ route, navigation }) {
                 </View>
                 <View style={styles.input_code_box}>
                     <TextInput
-                 
+                        onChangeText={text => {
+                            setCode(text);
+                            if (text.length === 6) {
+                                verifyCode();
+                            }
+                        }}
+
                         maxLength={6} style={styles.input} placeholderTextColor='white' placeholder="Digite o código de verificação" />
                 </View>
                 <View style={styles.button_box}>
-                    <TouchableOpacity onPress={verifyCode} style={styles.button}>
+                    <TouchableOpacity onPress={requestCode} style={styles.button}>
                         <Text style={styles.btn_text}>Reenviar código</Text>
                     </TouchableOpacity>
                 </View>
