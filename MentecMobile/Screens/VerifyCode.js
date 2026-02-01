@@ -42,21 +42,32 @@ export default function VerifyCode({ route, navigation }) {
     // }
 
     // Adicione o parâmetro 'receivedCode'
-    const verifyCode = async (receivedCode) => {
-        const payload2 = {
-            email: data.email,
-            codigo: receivedCode || code // Usa o que recebeu ou o estado como backup
+const verifyCode = async (receivedCode) => {
+    const payload2 = {
+        email: data.email,
+        codigo: receivedCode || code
+    };
+
+    try {
+        console.log("Enviando para o banco:", payload2);
+
+        const response = await axios.post(
+            `${API_URL}/email/verify`,
+            payload2
+        );
+
+        if (response.status === 200) {
+            alert("✅ Código verificado com sucesso!");
+            // navigation.navigate("ProximaTela"); // se quiser
         }
 
-        try {
-            console.log("Enviando para o banco:", payload2);
-            // const response = await axios.post(`${API_URL}/email/verify`, payload2);
-            // navegação de sucesso aqui...
-        } catch (e) {
-            alert("Erro na verificação: " + (e.response?.data?.message || e.message));
-        }
+    } catch (e) {
+        alert(
+            "Erro na verificação: " +
+            (e.response?.data?.message || e.message)
+        );
     }
-
+};
 
 
     useEffect(() => {
