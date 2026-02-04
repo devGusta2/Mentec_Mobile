@@ -67,31 +67,17 @@ const Inicio = ({ navigation }) => {
   );
 };
 
+
 export default function App() {
   return (
-  <NavigationContainer >
-      <Stack.Navigator initialRouteName="Inicio" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Inicio" component={Inicio} />
-        <Stack.Screen name = "Cadastro" component = {Cadastro}/>
-        <Stack.Screen name = "Login" component = {Login}/>
-        <Stack.Screen name = "Servicos" component = {Servicos}/>
-        <Stack.Screen name = "ListaMentorias" component = {ListaMonitorias} /> 
-        <Stack.Screen name = "AgendamentoMonitoria" component = {AgendamentoMonitoria} /> 
-        <Stack.Screen name = "perfil" component = {Perfil} /> 
-        <Stack.Screen name = "historico" component = {Historico} /> 
-        <Stack.Screen name = "Sac" component = {Sac} /> 
-        <Stack.Screen name = "MenuChat" component = {TelaMenuChat} /> 
-        <Stack.Screen name = "Chat" component = {Chat} /> 
-        <Stack.Screen name = "Forum" component = {Forum} /> 
-        <Stack.Screen name = "Confi" component = {Conf} /> 
-        <Stack.Screen name = "Cronograma" component = {Cronograma} /> 
-        <Stack.Screen name = "MaterialApoio" component = {MaterialApoio} /> 
-        <Stack.Screen name = "Feedback" component = {Feedback} /> 
-        <Stack.Screen name = "VerifyCode" component = {VerifyCode} /> 
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <AppRoutes />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
+
 
 
 const styles = StyleSheet.create({
