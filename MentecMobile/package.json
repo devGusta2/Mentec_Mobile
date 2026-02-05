@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-svg-core": "7.0.0",
     "@fortawesome/free-solid-svg-icons": "*",
     "@fortawesome/react-fontawesome": "*",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/native": "*",
     "@react-navigation/native-stack": "*",
     "axios": "^1.13.4",

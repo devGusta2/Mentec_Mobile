@@ -1,6 +1,12 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
+
+import AuthRoutes from './AuthRoutes';
+import EstudanteRoutes from './EstudanteRoutes';
+import MentorRoutes from './MentorRoutes';
+import ProfessorRoutes from './ProfessorRoutes';
+
 export default function AppRoutes() {
   const { user, loading } = useContext(AuthContext);
 

@@ -1,7 +1,21 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios';
 export const AuthContext = createContext({});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
