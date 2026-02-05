@@ -9,13 +9,15 @@ import {
 } from 'react-native';
 import msIcon from '../assets/microsoft.png';
 
+import { login } from '../contexts/AuthContext';
+
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erroEmail, setErroEmail] = useState('');
   const [erroSenha, setErroSenha] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     let temErro = false;
 
     if (email.trim() === '') {
@@ -32,10 +34,17 @@ export default function LoginScreen() {
       setErroSenha('');
     }
 
+    const credentials = {
+      email: email,
+      senha: senha
+    }
+
     if (!temErro) {
-      console.log('E-mail:', email);
-      console.log('Senha:', senha);
-      // Aqui você pode fazer a navegação ou chamada à API
+      const result = await login(credentials);
+
+      if (!result) {
+        alert("Email ou senha inválidos");
+      }
     }
   };
 

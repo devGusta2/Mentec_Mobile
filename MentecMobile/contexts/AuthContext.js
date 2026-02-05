@@ -5,15 +5,22 @@ export const AuthContext = createContext({});
 
 
 
+  const API_URL = "localhost:8082"
+
+  export const login = async (credentials) =>{
 
 
 
-
-
-
-
-
-
+    try{
+      const payload = {
+        senha: credentials.senha,
+        email: credentials.email
+      }
+      respone = await axios.post(`${API_URL}/login`,payload)
+    }catch(e){
+      alert("Erro ao fazer login")
+    }
+  }
 
 
 
