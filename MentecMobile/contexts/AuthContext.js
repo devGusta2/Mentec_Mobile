@@ -5,7 +5,7 @@ export const AuthContext = createContext({});
 
 
 
-  const API_URL = "localhost:8082"
+  const API_URL = "http://localhost:8082"
 
   export const login = async (credentials) =>{
 
@@ -16,7 +16,12 @@ export const AuthContext = createContext({});
         senha: credentials.senha,
         email: credentials.email
       }
-      respone = await axios.post(`${API_URL}/login`,payload)
+ 
+      const response = await axios.post(`${API_URL}/login`,payload)
+      console.log(response.data)
+      await AsyncStorage.setItem('@mentec_token', response.data.accessToken);
+      await AsyncStorage.setItem('@mentec_role', response.data.role);
+      setUser({ token: response.data.accessToken, role: response.data.role });
     }catch(e){
       alert("Erro ao fazer login")
     }
@@ -38,11 +43,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }
 
-  async function login(token, role) {
-    await AsyncStorage.setItem('@mentec_token', token);
-    await AsyncStorage.setItem('@mentec_role', role);
-    setUser({ token, role });
-  }
+
 
   async function logout() {
     await AsyncStorage.clear();

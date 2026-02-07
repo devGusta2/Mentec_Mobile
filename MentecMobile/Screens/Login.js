@@ -57,6 +57,7 @@ export default function LoginScreen() {
       <Text style={styles.title}>Entre na sua conta!</Text>
 
       <TextInput
+        underlineColorAndroid="transparent"
         style={styles.input}
         placeholder="E-mail"
         placeholderTextColor="#ddd"
@@ -67,6 +68,7 @@ export default function LoginScreen() {
       {erroEmail !== '' && <Text style={styles.errorText}>{erroEmail}</Text>}
 
       <TextInput
+          underlineColorAndroid="transparent"
         style={styles.input}
         placeholder="Senha"
         placeholderTextColor="#ddd"
@@ -110,6 +112,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   input: {
+       borderWidth: 0,
+          elevation: 0,
     width: '100%',
     backgroundColor: 'transparent',
     borderBottomWidth: 1,
@@ -118,6 +122,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
     paddingVertical: 8,
+
+
   },
   forgot: {
     color: '#fff',
@@ -130,7 +136,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
+    height:80,
+    display:'flex',
+    alignItems:'center',
+    justifyContent:"center"
   },
   buttonText: {
     color: '#fff',
@@ -145,6 +155,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     width: '100%',
+    height:80
   },
   microsoftText: {
     color: '#000',
