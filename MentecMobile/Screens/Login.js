@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+
 import {
   View,
   Text,
@@ -8,10 +9,12 @@ import {
   Image
 } from 'react-native';
 import msIcon from '../assets/microsoft.png';
+import { AuthContext } from '../contexts/AuthContext';
 
-import { login } from '../contexts/AuthContext';
 
 export default function LoginScreen() {
+  const { login } = useContext(AuthContext);
+
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erroEmail, setErroEmail] = useState('');
@@ -34,19 +37,12 @@ export default function LoginScreen() {
       setErroSenha('');
     }
 
-    const credentials = {
-      email: email,
-      senha: senha
-    }
-
     if (!temErro) {
-      const result = await login(credentials);
-
-      if (!result) {
-        alert("Email ou senha inválidos");
-      }
+      const credentials = { email, senha };
+      await login(credentials);
     }
   };
+
 
   const handleMicrosoftLogin = () => {
     console.log('Entrar com Microsoft');
@@ -68,7 +64,7 @@ export default function LoginScreen() {
       {erroEmail !== '' && <Text style={styles.errorText}>{erroEmail}</Text>}
 
       <TextInput
-          underlineColorAndroid="transparent"
+        underlineColorAndroid="transparent"
         style={styles.input}
         placeholder="Senha"
         placeholderTextColor="#ddd"
@@ -112,8 +108,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   input: {
-       borderWidth: 0,
-          elevation: 0,
+    borderWidth: 0,
+    elevation: 0,
     width: '100%',
     backgroundColor: 'transparent',
     borderBottomWidth: 1,
@@ -137,10 +133,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginBottom: 0,
-    height:80,
-    display:'flex',
-    alignItems:'center',
-    justifyContent:"center"
+    height: 80,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: "center"
   },
   buttonText: {
     color: '#fff',
@@ -155,7 +151,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     width: '100%',
-    height:80
+    height: 80
   },
   microsoftText: {
     color: '#000',
