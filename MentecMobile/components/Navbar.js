@@ -28,6 +28,10 @@ export default function NavBar({navigation}) {
       <Pressable  onPress={() => navigation.navigate('Feedback')} >
         <Ionicons name="chatbox-ellipses-outline" size={27} color="white" />
       </Pressable>
+      
+      <Pressable  onPress={() => navigation.navigate('Feedback')} >
+        <Ionicons name="chatbox-ellipses-outline" size={27} color="white" />
+      </Pressable>
 
     </View>
   );
@@ -35,14 +39,15 @@ export default function NavBar({navigation}) {
 
 const styles = StyleSheet.create({
  containerNavBar: {
-  position: 'absolute',
-  bottom: 10, // distância do rodapé (pode ajustar)
+  position: 'fixed',
+  bottom:25,
+   // distância do rodapé (pode ajustar)
   left: 0,
   right: 0,
   flexDirection: 'row',
   backgroundColor: '#770B1C',
   padding: 8,
-  height: 55,
+  height: 100,
   alignItems: 'center',
   justifyContent: 'space-evenly',
   borderRadius: 15,

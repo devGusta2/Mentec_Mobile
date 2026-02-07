@@ -1,3 +1,14 @@
+import Servicos from "../Screens/Servicos";
+
+import Cronograma from "../Screens/Cronograma";
+import Perfil from "../Screens/perfil";
+import ListaMonitorias from "../Screens/listaMonitorias";
+import AgendamentoMonitoria from "../Screens/agendamentoMonitoria";
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
 export function EstudanteRoutes() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
