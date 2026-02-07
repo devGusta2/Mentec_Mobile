@@ -38,7 +38,7 @@ export default function LoginScreen() {
     }
 
     if (!temErro) {
-      const credentials = { email, senha };
+      const credentials = { email:email, senha:senha };
       await login(credentials);
     }
   };

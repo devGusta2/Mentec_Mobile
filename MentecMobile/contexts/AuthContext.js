@@ -21,18 +21,19 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }
 
-  async function login(credentials) {
+  const login = async (credentials) =>{
     try {
       const payload = {
-        senha: credentials.senha,
-        email: credentials.email
-      };
+        email: credentials.email,
+        senha: credentials.senha
 
+      };
+ 
       const response = await axios.post(`${API_URL}/login`, payload);
 
       await AsyncStorage.setItem('@mentec_token', response.data.accessToken);
       await AsyncStorage.setItem('@mentec_role', response.data.role);
-
+      console.log(response.data)
       setUser({
         token: response.data.accessToken,
         role: response.data.role
@@ -40,7 +41,7 @@ export function AuthProvider({ children }) {
 
     } catch (e) {
       console.log(e);
-      alert("Erro ao fazer login");
+      alert("Erro ao fazer login" + e.message);
     }
   }
 
