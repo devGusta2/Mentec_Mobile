@@ -11,7 +11,7 @@ import NavBar from '../components/Navbar'
 export default function Servicos({ navigation }) {
   return (
     <View style={styles.containerTela}>
-      <Header />
+      <Header title = "Serviços"/>
       <View style={styles.container}>
         <BotaoMenu
           onPress={() => navigation.navigate('ListaMentorias')}

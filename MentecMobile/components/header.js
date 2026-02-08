@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Header() {
+export default function Header({title}) {
   return (
     <View style={styles.container}>
       <View style={styles.containerMentec}>
@@ -8,7 +8,9 @@ export default function Header() {
           Mentec
         </Text>
       </View>
-      <Text style={styles.text}>Serviço</Text>
+      <Text style={styles.text}>
+        {title}
+      </Text>
     </View>
   )
 }
