@@ -4,12 +4,14 @@ import axios from 'axios';
 
 export const AuthContext = createContext({});
 
-const API_URL = "http://localhost:8082";
+
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
+  
   async function loadUser() {
     const token = await AsyncStorage.getItem('@mentec_token');
     const role = await AsyncStorage.getItem('@mentec_role');
