@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-export default function MentecScreen() {
+import Header from '../components/header';
+import NavBar from '../components/Navbar';
+export default function Forum({navigation}) {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Mentec</Text>
-      </View>
+      <Header title = "Fórum">
+        
+      </Header>
 
       {/* Conteúdo principal */}
       <ScrollView contentContainerStyle={styles.content}>
@@ -38,13 +39,7 @@ export default function MentecScreen() {
         <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
 
-      {/* Barra inferior */}
-      <View style={styles.bottomBar}>
-        <Ionicons name="home" size={26} color="#fff" />
-        <Ionicons name="grid" size={26} color="#fff" />
-        <Ionicons name="chatbubble" size={26} color="#fff" />
-        <Ionicons name="person" size={26} color="#fff" />
-      </View>
+      <NavBar/>
     </View>
   );
 }
@@ -53,6 +48,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f4f4f4',
+    alignItems:'center',
+    justifyContent:'center'
   },
   header: {
     backgroundColor: '#6b0f1a',
@@ -65,17 +62,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   content: {
-    padding: 20,
+    display:'flex',alignItems:'center',
+    justifyContent:'center'
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginTop:200
   },
   subtitle: {
     fontSize: 14,
     color: '#555',
-    marginBottom: 20,
+    marginTop:20
+
   },
   searchContainer: {
     flexDirection: 'row',
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     height: 45,
-    marginBottom: 20,
+    marginTop:50
   },
   searchInput: {
     flex: 1,
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    bottom: 80,
+    bottom:150,
     right: 25,
     backgroundColor: '#6b0f1a',
     width: 55,
