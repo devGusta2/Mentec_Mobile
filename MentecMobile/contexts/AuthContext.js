@@ -9,6 +9,8 @@ export const AuthContext = createContext({});
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   
@@ -52,12 +54,42 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+
+
+  const requireAuth = (navigation, redirectScreen) =>{
+    if(!user){
+      
+      alert("Para continuar, é necessário estár logado em sua conta!")
+         navigation.navigate("Login", {
+        redirectTo: redirectScreen
+      });
+      return false
+    }
+    return true;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     loadUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, requireAuth }}>
       {children}
     </AuthContext.Provider>
   );
