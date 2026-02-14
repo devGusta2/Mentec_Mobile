@@ -1,53 +1,50 @@
-import { Text, View, StyleSheet, Image, Pressable, Alert } from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Octicons from '@expo/vector-icons/Octicons';
 import Fontisto from '@expo/vector-icons/Fontisto';
+
 import { useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
-import { AuthContext  } from '../contexts/AuthContext'
+import { AuthContext } from '../contexts/AuthContext';
 
-export default function NavBar({ navigation }) {
+export default function NavBar() {
+  const navigation = useNavigation(); // ✅ AQUI
+  const { logout } = useContext(AuthContext);
 
-  const handlePress = (message) => {
-    alert(message);
-  };
-
-const { logout } = useContext(AuthContext );
   const handleLogout = async () => {
     await logout();
-    // opcional: se quiser garantir que vai voltar pro login
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: "Inicio" }],
-    // });
+    navigation.navigate("Login"); // opcional
   };
+
   return (
     <View style={styles.containerNavBar}>
 
-      <Pressable onPress={() => navigation.navigate('Inicio')} >
+      <Pressable onPress={() => navigation.navigate('Inicio')}>
         <MaterialCommunityIcons name="home-outline" size={30} color="white" />
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate('Servicos')} >
+      <Pressable onPress={() => navigation.navigate('Servicos')}>
         <Fontisto name="nav-icon-grid" size={22} color="white" />
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate('perfil')} >
+      <Pressable onPress={() => navigation.navigate('perfil')}>
         <Octicons name="person" size={26} color="white" />
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate('Feedback')} >
+      <Pressable onPress={() => navigation.navigate('Feedback')}>
         <Ionicons name="chatbox-ellipses-outline" size={27} color="white" />
       </Pressable>
 
-      <Pressable onPress={handleLogout} >
-        <Ionicons name="chatbox-ellipses-outline" size={27} color="white" />
+      <Pressable onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={27} color="white" />
       </Pressable>
 
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   containerNavBar: {

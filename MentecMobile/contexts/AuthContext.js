@@ -69,21 +69,6 @@ export function AuthProvider({ children }) {
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(() => {
     loadUser();
   }, []);
