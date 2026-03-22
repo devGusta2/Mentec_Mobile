@@ -24,7 +24,7 @@ console.log("ProfessorRoutes:", ProfessorRoutes);
   }
 
   switch (user.role) {
-    case 'STUDENT_FATEC':
+    case 'ESTUDANTEFATEC':
       return <EstudanteRoutes />;
 
     case 'MENTOR':
