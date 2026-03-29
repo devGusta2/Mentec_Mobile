@@ -1,63 +1,74 @@
-import { View, StyleSheet, StatusBar, Alert, Pressable, Text, ScrollView } from 'react-native';
-import Header from '../components/headerHistori';
+import { View, StyleSheet, ScrollView } from 'react-native';
+
+import Header from '../components/header';
 import CaixaMonitoria from '../components/caixaMonitoria';
 import NavBar from '../components/Navbar';
 
-export default function HistoricoMonitorias({navigation}) {
+export default function HistoricoMonitorias() {
   return (
     <View style={styles.containerTela}>
-      <Header />
+
+      <Header titulo="Histórico de Monitorias" />
 
       <View style={styles.container}>
+
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Pressable onPress={()=>{navigation.navigate('MaterialApoio')}}>
-          <CaixaMonitoria />
-          </Pressable>
-          <Pressable onPress={()=>{navigation.navigate('MaterialApoio')}}>
-          <CaixaMonitoria />
-          </Pressable>
-          <Pressable onPress={()=>{navigation.navigate('MaterialApoio')}}>
-          <CaixaMonitoria />
-          </Pressable>
-       
+
+          <CaixaMonitoria
+            titulo="React Native"
+            descricao="Monitoria concluída em 20/03"
+            imagem={require('../assets/monitoria1.jpg')}
+            botoes={[
+              { texto: "Material de Apoio", onPress: () => alert("Abrir modal") },
+              { texto: "Feedback", onPress: () => navigation.navigate("Feedback") }
+            ]}
+          />
+
+          <CaixaMonitoria
+            titulo="Banco de Dados"
+            descricao="Monitoria concluída em 18/03"
+            imagem={require('../assets/monitoria1.jpg')}
+            botoes={[
+              { texto: "Material", rota: "MaterialApoio" },
+              { texto: "Feedback", onPress: () => navigation.navigate("Feedback") }
+            ]}
+          />
+
+          <CaixaMonitoria
+            titulo="Java"
+            descricao="Monitoria concluída em 15/03"
+            imagem={require('../assets/monitoria1.jpg')}
+           botoes={[
+              { texto: "Material de Apoio", onPress: () => alert("Abrir modal") },
+              { texto: "Feedback", onPress: () => navigation.navigate("Feedback") }
+            ]}
+          />
+
         </ScrollView>
+
       </View>
 
       <NavBar />
+
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
+
   containerTela: {
     flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#770B1C',
   },
 
   container: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
-    paddingHorizontal: 10,
-    paddingTop: 10,
-  },
-
-  footer: {
-    width: '100%',
-    height: 30,
-    backgroundColor: '#770B1C',
-    marginTop: 20,
-  },
-
-  parteBranca: {
-    flex: 1,
     backgroundColor: '#E5E5E5',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    marginTop: -30,
-    paddingTop: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 140,
+    marginTop: 10,
+    padding: 10,
   },
+
 });

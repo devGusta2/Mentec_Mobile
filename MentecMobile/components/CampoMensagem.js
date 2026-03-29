@@ -6,12 +6,12 @@ import BotaoPadrao from "./BotaoPadrao";
 export default function CampoMensagem({ title, onPress }) {
   return (
 
-    <View style={styles.container}> 
-      <TextInput 
+    <View style={styles.container}>
+      <TextInput
         style={styles.containerTexto} placeholder = 'Digite uma mensagem...'>
       </TextInput>
       <Pressable onPress={onPress}>
-       { /*<Entypo name="attachment" size={28} color="white" />*/}
+      { /*<Entypo name="attachment" size={28} color="white" />*/}
       </Pressable>
     </View>
   );

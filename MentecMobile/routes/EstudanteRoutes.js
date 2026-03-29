@@ -1,9 +1,9 @@
 import Servicos from "../Screens/Servicos";
 
 import Cronograma from "../Screens/Cronograma";
-import Perfil from "../Screens/perfil";
-import ListaMonitorias from "../Screens/listaMonitorias";
-import AgendamentoMonitoria from "../Screens/agendamentoMonitoria";
+import Perfil from "../Screens/Perfil";
+import ListaMonitorias from "../Screens/ListaMonitorias";
+import AgendamentoMonitoria from "../Screens/AgendamentoMonitoria";
 // import Forum from "../Screens/Forum";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 

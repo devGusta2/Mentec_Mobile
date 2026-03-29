@@ -1,24 +1,22 @@
 import React from 'react';
-import { View, StyleSheet, StatusBar, Alert, Pressable, Text } from 'react-native';
-import Header from '../components/header2';
+import { View, StyleSheet, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import Header from '../components/header';
 import CaixaMonitoria from '../components/caixaMonitoria';
-import BotaoPadrao from '../components/BotaoPadraos';
+import BotaoPadrao from '../components/BotaoPadrao';
 import NavBar from '../components/Navbar';
 
-export default function AgendamentoMonitoria({ title, onPress, navigation}) {
+export default function AgendamentoMonitoria() {
   
-  const handlePress = (message) => {
-    alert(message);
-  
-  };
-  
+  const navigation = useNavigation();
+
   return (
-    
     <View style={styles.container}>
 
-    <Text style={styles.textMentec}>Mentec</Text>
       <StatusBar backgroundColor="#770B1C" barStyle="light-content" />
-      <Header title="Monitoria" />
+
+      <Header titulo="Monitoria" />
 
       <View style={styles.parteBranca}>
 
@@ -29,13 +27,17 @@ export default function AgendamentoMonitoria({ title, onPress, navigation}) {
             title="Agendar"
             onPress={() => alert('Você clicou no agendamento')}
           />
+
           <BotaoPadrao
             title="Materiais de apoio"
             onPress={() => navigation.navigate('MaterialApoio')}
-          />          
+          />
         </View>
-        <NavBar />
-      </View>     
+
+      </View>
+
+      <NavBar />
+
     </View>
   );
 }
@@ -53,23 +55,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     marginTop: -30,
     paddingTop: 50,
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    paddingBottom: 140, 
+    alignItems: 'center',
+    paddingBottom: 100,
   },
 
   containerBotoes: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '90%',
-    height: '80%',
-    marginTop: 17,
-    fontWeight: 'bold',
+    marginTop: 20,
   },
-
-  textMentec:{
-      color:'white',
-      paddingLeft: 262,
-      fontSize:18,
-    },
 });
