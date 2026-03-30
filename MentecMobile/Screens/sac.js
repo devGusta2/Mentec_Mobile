@@ -80,7 +80,7 @@ export default function SAC({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+
       <View style={styles.containerTela}>
 
         {/* ================= HEADER ================= */}
@@ -171,7 +171,6 @@ export default function SAC({ navigation }) {
         {/* ===== NAVBAR INFERIOR ===== */}
         <NavBar navigation={navigation} />
       </View>
-    </SafeAreaView>
   );
 }
 
