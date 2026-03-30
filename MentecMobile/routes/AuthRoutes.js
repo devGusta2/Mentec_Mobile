@@ -11,6 +11,8 @@ import ListaMonitorias from "../Screens/listaMonitorias";
 import AgendamentoMonitoria from "../Screens/agendamentoMonitoria";
 import Forum from '../Screens/Forum'
 import Servicos from "../Screens/Servicos";
+import Sac from '../Screens/Sac'
+import Servicos from '../Screens/Servicos'
 const Stack = createNativeStackNavigator();
 
 export default function AuthRoutes() {
@@ -28,6 +30,8 @@ export default function AuthRoutes() {
       <Stack.Screen name="agendamentoMonitoria" component={AgendamentoMonitoria} />
       <Stack.Screen name="Forum" component={Forum} />
       <Stack.Screen name="VerifyCode" component={VerifyCode} />
+      <Stack.Screen name="Sac" component={Sac} />
+      <Stack.Screen name="Servicos" component={Servicos} />
     </Stack.Navigator>
   );
 }
