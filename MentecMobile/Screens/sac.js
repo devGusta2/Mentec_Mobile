@@ -16,7 +16,6 @@ import {
 
 // Componente de seleção (dropdown)
 import { Picker } from '@react-native-picker/picker';
-
 // Componentes e serviços externos
 import NavBar from '../components/Navbar';
 import axios from 'axios';
