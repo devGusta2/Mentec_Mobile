@@ -11,8 +11,7 @@ import ListaMonitorias from "../Screens/listaMonitorias";
 import AgendamentoMonitoria from "../Screens/agendamentoMonitoria";
 import Forum from '../Screens/Forum'
 import Servicos from "../Screens/Servicos";
-import Sac from '../Screens/Sac'
-import Servicos from '../Screens/Servicos'
+import Sac from "../Screens/Sac";
 const Stack = createNativeStackNavigator();
 
 export default function AuthRoutes() {
@@ -21,7 +20,6 @@ export default function AuthRoutes() {
       initialRouteName="Inicio"
       screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Inicio" component={Inicio} />
-      <Stack.Screen name="Servicos" component={Servicos} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Cadastro" component={Cadastro} />
       <Stack.Screen name="Cronograma" component={Cronograma} />

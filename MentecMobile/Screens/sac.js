@@ -24,7 +24,7 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 
 // Componente principal da tela SAC
-export default function SAC({ navigation }) {
+export default function Sac({ navigation }) {
 
   // Pegando dados do usuário logado
   const { user } = useContext(AuthContext);
