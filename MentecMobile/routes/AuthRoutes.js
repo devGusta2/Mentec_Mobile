@@ -8,11 +8,11 @@ import VerifyCode from "../Screens/VerifyCode";
 import Cronograma from "../Screens/Cronograma";
 import Perfil from '../Screens/Perfil';
 import ListaMonitorias from "../Screens/ListaMonitorias";
-import Forum from '../Screens/Forum';
+import Forum from '../Screens/forum';
 import Servicos from "../Screens/Servicos";
 import Feedback from '../Screens/Feedback';
 import HistoricoMonitorias from '../Screens/HistoricoMonitorias';
-import SAC from '../Screens/SAC';
+import SAC from '../Screens/Sac';
 import conf from '../Screens/conf';
 
 const Stack = createNativeStackNavigator();
