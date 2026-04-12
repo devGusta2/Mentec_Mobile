@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View, Text, Image } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import mascote from "../assets/MascoteMentecVermelho.png";
 
 export default function Inicio({ navigation }) {

@@ -1,22 +1,21 @@
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { getApiUrl } from "../Utils/AuthRequestProvider";
-import { ActivityIndicator } from "react-native";
+import { useEffect, useState } from "react";
 
 
 
+const API_URL = "http://localhost:8080"
 
 
 export default function VerifyCode({ route, navigation }) {
 
-    const API_URL = getApiUrl();
+
     const { data } = route.params || {};
     const [code, setCode] = useState("");
-    const [loading, setLoading] = useState(false)
+
 
 
     // const {data} = route.params;
@@ -30,9 +29,7 @@ export default function VerifyCode({ route, navigation }) {
     }
     const requestCode = async () => {
         try {
-            setLoading(true)
             const response = await axios.post(`${API_URL}/email/check`, payload)
-            setLoading(false)
 
         } catch (e) {
             alert("Ocorreu algum erro durante o envio dos dados: " + e.message || "")
@@ -45,32 +42,32 @@ export default function VerifyCode({ route, navigation }) {
     // }
 
     // Adicione o parâmetro 'receivedCode'
-    const verifyCode = async (receivedCode) => {
-        const payload2 = {
-            email: data.email,
-            codigo: receivedCode || code
-        };
-
-        try {
-            console.log("Enviando para o banco:", payload2);
-
-            const response = await axios.post(
-                `${API_URL}/email/verify`,
-                payload2
-            );
-
-            if (response.status === 200) {
-                alert("✅ Código verificado com sucesso!");
-                // navigation.navigate("ProximaTela"); // se quiser
-            }
-
-        } catch (e) {
-            alert(
-                "Erro na verificação: " +
-                (e.response?.data?.message || e.message)
-            );
-        }
+const verifyCode = async (receivedCode) => {
+    const payload2 = {
+        email: data.email,
+        codigo: receivedCode || code
     };
+
+    try {
+        console.log("Enviando para o banco:", payload2);
+
+        const response = await axios.post(
+            `${API_URL}/email/verify`,
+            payload2
+        );
+
+        if (response.status === 200) {
+            alert("✅ Código verificado com sucesso!");
+            // navigation.navigate("ProximaTela"); // se quiser
+        }
+
+    } catch (e) {
+        alert(
+            "Erro na verificação: " +
+            (e.response?.data?.message || e.message)
+        );
+    }
+};
 
 
     useEffect(() => {
@@ -82,27 +79,15 @@ export default function VerifyCode({ route, navigation }) {
             <View style={styles.container}>
 
                 <View style={styles.text_box}>
-                    {
-                        loading === true ? (
-                            <Text style={styles.title}>Estamos enviando um e-mail para confirmar seu cadastro.</Text>
-                            
-                        ) : (
-                            <Text style={styles.title}>Enviamos um e-mail para confirmar seu cadastro!</Text>
-                        )
-                    }
+                    <Text style={styles.title}>Enviamos um e-mail para confirmar seu cadastro</Text>
                     <FontAwesome color={'white'} size={100} style={styles.icon_mail} name="envelope" />
                 </View>
                 <View style={styles.text_box2}>
                     <Text style={styles.sub_title}>Caso não encontre o e-mail, confira também as pastas Spam ou Lixo Eletrônico.</Text>
                 </View>
-                {loading && (
-                    <View style={styles.loadingOverlay}>
-                        <ActivityIndicator size={60}color="#fff" />
-                    </View>
-                )}
                 <View style={styles.input_code_box}>
                     <TextInput
-                        style={styles.input}
+                    style={styles.input}
                         onChangeText={text => {
                             const numericText = text.replace(/[^0-9]/g, "");
                             setCode(numericText);
@@ -191,16 +176,5 @@ const styles = StyleSheet.create({
         fontSize: '15pt',
         textAlign: 'center',
 
-    },
-    loadingOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10
-}
+    }
 })

@@ -1,35 +1,27 @@
-import {TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 
-
-export default function BotaoMenu ({titulo,imagem, onPress}) {
-  return(
-  <TouchableOpacity onPress={onPress}>  
-    <View style={styles.container}>
-    {imagem}
-    <Text style={styles.text}>{titulo}</Text>
-    
-    </View>
-</TouchableOpacity>    
-  )
-} 
+export default function BotaoMenu({ titulo, imagem, onPress }) {
+  return (
+    <TouchableOpacity style={styles.botao} onPress={onPress}>
+      {imagem}
+      <Text style={styles.texto}>{titulo}</Text>
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
-  text: {
-    color: 'white',
-    marginTop:10,
-        
-  },
-
-  container: {
+  botao: {
+    width: 120,
+    height: 120,
     backgroundColor: '#770B1C',
-    width: 130,
-    height:130,
-    justifyContent: 'center',
-    alignItems:'center',
     borderRadius: 10,
-    padding: 20,
-  },  
-
-   
-})
-
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  texto: {
+    color: '#fff',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+});
