@@ -3,12 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import NavBar from '../components/Navbar'
-import OptionCard from "../components/Paulo/OptionCard";
-import AvatarModal from "../components/Paulo/AvatarModal";
+import NavBar from '../components/Navbar';
+import OptionCard from '../components/OptionCard';
+import AvatarModal from '../components/AvatarModal';
 
 // Obs: Coloque uma imagem padrão em /assets
-import defaultAvatar from "../assets/psi.jpg";
+import defaultAvatar from '../assets/psi.jpg';
 
 export default function ProfileScreen({ navigation }) {
   const [avatar, setAvatar] = useState(null);
@@ -33,7 +33,7 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.avatarWrapper}
           onPress={() => setModalVisible(true)}
         >
@@ -52,13 +52,7 @@ export default function ProfileScreen({ navigation }) {
       {/* CARDS DE OPÇÕES */}
       <View style={styles.cardsContainer}>
 
-        {/* 
-          🔽🔽🔽 PARA SUA EQUIPE 🔽🔽🔽
-          Basta trocar o "onPress" para navegação 
-          navigation.navigate("NomeDaTelaDoAmigo")
-        */}
-
-        <OptionCard
+      <OptionCard
           icon={<Ionicons name="settings-sharp" size={28} color="#800010" />}
           title="Conta"
           subtitle="Alteração de número, Atualização de email"
