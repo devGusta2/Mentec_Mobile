@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
   async function loadUser() {
     const token = await AsyncStorage.getItem('@mentec_token');
     const role = await AsyncStorage.getItem('@mentec_role');
-
+    const userid = await AsyncStorage.getItem('@mentec_userid');
     if (token && role) {
       setUser({ token, role });
     }
@@ -37,6 +37,7 @@ export function AuthProvider({ children }) {
 
       await AsyncStorage.setItem('@mentec_token', response.data.accessToken);
       await AsyncStorage.setItem('@mentec_role', response.data.role);
+      await AsyncStorage.setItem('@mentec_userid', response.data.userId.toString());
       console.log(response.data)
       setUser({
         token: response.data.accessToken,
