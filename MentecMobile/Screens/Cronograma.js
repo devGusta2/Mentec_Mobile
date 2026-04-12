@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import NavBar from '../components/Navbar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+
 
 export default function Cronograma({ navigation }) {
   const totalQuadrados = 21;
