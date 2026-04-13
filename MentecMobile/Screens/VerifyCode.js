@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 
 
-const API_URL = "http://localhost:8080"
+const API_URL = "http://localhost:8082"
 
 
 export default function VerifyCode({ route, navigation }) {
