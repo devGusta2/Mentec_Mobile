@@ -18,9 +18,15 @@ export default function ListaMonitorias() {
   // 🔥 AGENDAR MONITORIA
   const matricular = async (monitoriaId: any) => {
     try {
-      const TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJpZFVzZXIiOiI2ZmFhYTRlMi02Y…xIZn3qUkpD6jITBfYmaOnSqocclwWR37SPyrpTwBk-RAkRmSg";
 
-      const idUser = "a2b7c823-79d4-40e1-b6d5-59857e55e477";
+      const TOKEN = await AsyncStorage.getItem('@mentec_token').toString();
+
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+
+      // const TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJpZFVzZXIiOiI2ZmFhYTRlMi02Y…xIZn3qUkpD6jITBfYmaOnSqocclwWR37SPyrpTwBk-RAkRmSg";
+
+      // const idUser = "a2b7c823-79d4-40e1-b6d5-59857e55e477";
 
       const payload = {
         idAluno: idUser,
