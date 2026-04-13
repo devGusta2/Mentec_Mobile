@@ -37,9 +37,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#770B1C',
     padding: 8,
     width: '100%',
-    height: 50,
+    height: 60,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    borderRadius: 10,
+
+    position: 'absolute', //para manter a navbar fixa no final da pagina
+    bottom: 0,
+    left: 0,
+    right: 0,
+
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
 });
