@@ -1,5 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Calendar } from 'react-native-calendars';
 
 import Inicio from "../Screens/Inicio";
 import Login from "../Screens/Login";
@@ -20,7 +21,7 @@ const Stack = createNativeStackNavigator();
 export default function AuthRoutes() {
   return (
     <Stack.Navigator
-      initialRouteName="Inicio"
+      initialRouteName="ListaMonitorias"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Inicio" component={Inicio} />
