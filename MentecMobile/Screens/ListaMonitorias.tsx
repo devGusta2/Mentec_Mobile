@@ -19,7 +19,7 @@ export default function ListaMonitorias() {
   const matricular = async (monitoriaId: any) => {
     try {
 
-      const TOKEN = await AsyncStorage.getItem('@mentec_token').toString();
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
 
       const idUser = await AsyncStorage.getItem('@mentec_userid');
 
@@ -33,6 +33,7 @@ export default function ListaMonitorias() {
         monitoriaId: monitoriaId
       };
 
+      console.log(TOKEN)
       await axios.post(
         `${API_URL}/agendamentos/agendar`,
         payload,
@@ -42,6 +43,7 @@ export default function ListaMonitorias() {
           }
         }
       );
+
 
       alert("Agendamento efetuado com sucesso!");
 
