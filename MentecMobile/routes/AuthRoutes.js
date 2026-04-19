@@ -1,5 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Calendar } from 'react-native-calendars';
 
 import Inicio from "../Screens/Inicio";
 import Login from "../Screens/Login";

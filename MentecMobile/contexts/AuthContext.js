@@ -32,12 +32,12 @@ export function AuthProvider({ children }) {
         senha: credentials.senha
 
       };
- 
+
       const response = await axios.post(`${API_URL}/login`, payload);
 
       await AsyncStorage.setItem('@mentec_token', response.data.accessToken);
       await AsyncStorage.setItem('@mentec_role', response.data.role);
-      await AsyncStorage.setItem('@mentec_userid', response.data.userId.toString());
+      await AsyncStorage.setItem('@mentec_userid', response.data.idUser);
       console.log(response.data)
       setUser({
         token: response.data.accessToken,
