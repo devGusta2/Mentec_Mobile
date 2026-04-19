@@ -10,77 +10,40 @@ import {
 import { Calendar } from 'react-native-calendars';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Cronograma({ navigation }) {
 
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-  const TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJpZFVzZXIiOiI2ZmFhYTRlMi02Y…xIZn3qUkpD6jITBfYmaOnSqocclwWR37SPyrpTwBk-RAkRmSg";
-
-  // const getToken = async () => {
-  //   return await AsyncStorage.getItem('@mentec_token');
-  // }
-  // const TOKEN = getToken();
-  
-
   const [selectedDate, setSelectedDate] = useState(null);
   const [agendamentos, setAgendamentos] = useState([]);
 
-  // Buscar agendamentos
-  const fetchAgendamentos = async () => {
+  // 🔥 AGORA BUSCA DIRETO O CRONOGRAMA
+  const fetchCronograma = async () => {
     try {
-      const response = await axios.get(`${API_URL}/agendamentos/listar`, {
-        headers: { Authorization: `Bearer ${TOKEN}` }
-      });
-      return response.data;
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+      const response = await axios.get(
+        `${API_URL}/agendamentos/buscar/${idUser}`,
+        {
+          headers: { Authorization: `Bearer ${TOKEN}` }
+        }
+      );
+
+      setAgendamentos(response.data);
+
     } catch (e) {
-      console.log("Erro agendamentos", e);
-      return [];
+      console.log("Erro cronograma", e);
     }
   };
 
-  // Buscar monitorias
-  const fetchMonitorias = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/monitorias/listar`, {
-        headers: { Authorization: `Bearer ${TOKEN}` }
-      });
-      return response.data;
-    } catch (e) {
-      console.log("Erro monitorias", e);
-      return [];
-    }
-  };
-
-  // Carregar e juntar os dados
   useEffect(() => {
-    const carregarDados = async () => {
-      const agendamentosData = await fetchAgendamentos();
-      const monitoriasData = await fetchMonitorias();
-
-      const combinado = agendamentosData.map((agendamento) => {
-        const monitoria = monitoriasData.find(
-          (m) => m.id === agendamento.monitoriaId
-        );
-
-        return {
-          id: agendamento.id,
-          data: agendamento.dataAgendamento.split("T")[0],
-          monitoria: {
-            titulo: monitoria?.titulo || "Monitoria",
-            horario: monitoria?.horario || "--:--",
-            link: monitoria?.link || "https://teams.microsoft.com/"
-          }
-        };
-      });
-
-      setAgendamentos(combinado);
-    };
-
-    carregarDados();
+    fetchCronograma();
   }, []);
 
-  // Marcação dos dias no calendário
+  // 🔥 MARCAR DATAS
   const markedDates = {};
 
   agendamentos.forEach((item) => {
@@ -98,7 +61,7 @@ export default function Cronograma({ navigation }) {
     };
   }
 
-  // Filtrar os eventos
+  // 🔥 FILTRAR EVENTOS
   const eventosDoDia = agendamentos.filter(
     (a) => a.data === selectedDate
   );
@@ -106,20 +69,17 @@ export default function Cronograma({ navigation }) {
   return (
     <View style={styles.container}>
 
-      {/* HEADER */}
       <View style={styles.header}>
         <Text style={styles.tituloHeader}>Cronograma</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
-        {/* CALENDÁRIO */}
         <Calendar
           onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={markedDates}
         />
 
-        {/* LISTA */}
         {selectedDate && (
           <Text style={styles.subtitulo}>
             Monitorias do dia {selectedDate}
@@ -127,22 +87,22 @@ export default function Cronograma({ navigation }) {
         )}
 
         {eventosDoDia.length > 0 ? (
-          eventosDoDia.map((item) => (
-            <View key={item.id} style={styles.card}>
+          eventosDoDia.map((item, index) => (
+            <View key={index} style={styles.card}>
 
               <View>
                 <Text style={styles.titulo}>
-                  {item.monitoria.titulo}
+                  {item.titulo}
                 </Text>
                 <Text style={styles.horario}>
-                  {item.monitoria.horario}
+                  {item.horario}
                 </Text>
               </View>
 
               <Pressable
                 style={styles.botao}
                 onPress={() =>
-                  Linking.openURL(item.monitoria.link)
+                  Linking.openURL(item.link || "https://teams.microsoft.com/")
                 }
               >
                 <Text style={styles.textBotao}>Entrar</Text>
@@ -162,8 +122,8 @@ export default function Cronograma({ navigation }) {
       <NavBar navigation={navigation} />
     </View>
   );
-}
 
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -220,6 +180,7 @@ const styles = StyleSheet.create({
   textBotao: {
     color: '#fff',
     fontSize: 12,
+    fontWeight: 'bold',
   },
 
   vazio: {
