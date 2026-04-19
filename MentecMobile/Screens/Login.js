@@ -12,7 +12,7 @@ import msIcon from '../assets/microsoft.png';
 import { AuthContext } from '../contexts/AuthContext';
 
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation}) {
   const { login } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
@@ -74,7 +74,7 @@ export default function LoginScreen() {
       />
       {erroSenha !== '' && <Text style={styles.errorText}>{erroSenha}</Text>}
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('RecuperarSenha')}>
         <Text style={styles.forgot}>Esqueceu sua senha?</Text>
       </TouchableOpacity>
 
