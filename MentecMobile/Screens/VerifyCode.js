@@ -7,11 +7,12 @@ import { useEffect, useState } from "react";
 
 
 
-const API_URL = "http://localhost:8080"
+
 
 
 export default function VerifyCode({ route, navigation }) {
-
+    
+    const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
     const { data } = route.params || {};
     const [code, setCode] = useState("");

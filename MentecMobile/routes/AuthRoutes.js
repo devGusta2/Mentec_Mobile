@@ -21,7 +21,7 @@ const Stack = createNativeStackNavigator();
 export default function AuthRoutes() {
   return (
     <Stack.Navigator
-      initialRouteName="ListaMonitorias"
+      initialRouteName="Inicio"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Inicio" component={Inicio} />
