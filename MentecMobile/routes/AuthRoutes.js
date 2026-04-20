@@ -15,6 +15,7 @@ import Feedback from '../Screens/Feedback';
 import HistoricoMonitorias from '../Screens/HistoricoMonitorias';
 import SAC from '../Screens/Sac';
 import conf from '../Screens/Conf';
+import RecuperarSenha from "../Screens/RecuperarSenha";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ export default function AuthRoutes() {
       <Stack.Screen name="Feedback" component={Feedback} />
       <Stack.Screen name="conf" component={conf} />
       <Stack.Screen name="VerifyCode" component={VerifyCode} />
+      <Stack.Screen name="RecuperarSenha" component={RecuperarSenha} />
     </Stack.Navigator>
   );
 }
