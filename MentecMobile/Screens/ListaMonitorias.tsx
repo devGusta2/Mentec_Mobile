@@ -18,22 +18,14 @@ export default function ListaMonitorias() {
   // 🔥 AGENDAR MONITORIA
   const matricular = async (monitoriaId: any) => {
     try {
-
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
-
       const idUser = await AsyncStorage.getItem('@mentec_userid');
-
-
-      // const TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJpZFVzZXIiOiI2ZmFhYTRlMi02Y…xIZn3qUkpD6jITBfYmaOnSqocclwWR37SPyrpTwBk-RAkRmSg";
-
-      // const idUser = "a2b7c823-79d4-40e1-b6d5-59857e55e477";
 
       const payload = {
         idAluno: idUser,
         monitoriaId: monitoriaId
       };
 
-      console.log(TOKEN)
       await axios.post(
         `${API_URL}/agendamentos/agendar`,
         payload,
@@ -43,7 +35,6 @@ export default function ListaMonitorias() {
           }
         }
       );
-
 
       alert("Agendamento efetuado com sucesso!");
 
@@ -110,10 +101,20 @@ export default function ListaMonitorias() {
 
             <View style={styles.containerInfo}>
               <Text style={styles.titulo}>{item.titulo}</Text>
-              <Text style={styles.descricao}>{item.descricao}</Text>
-              <Text style={styles.descricao}>{item.monitor}</Text>
-              <Text style={styles.descricao}>{item.horario}</Text>
-              <Text style={styles.data}>Data: {item.data}</Text>
+
+              <Text style={styles.descricao}>
+                {item.monitor
+                  ? `${item.monitor.nome} ${item.monitor.sobrenome}`
+                  : "Sem monitor"}
+              </Text>
+
+              <Text style={styles.descricao}>
+                {item.horario ? item.horario.slice(0, 5) : ""}
+              </Text>
+
+              <Text style={styles.data}>
+                Data: {item.data}
+              </Text>
 
               <Pressable
                 style={styles.botao}
