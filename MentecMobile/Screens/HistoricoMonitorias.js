@@ -47,10 +47,15 @@ export default function HistoricoMonitorias({ navigation }) {
   }, []);
 
   // 🔥 FORMATAR DATA
-  const formatarData = (data) => {
-    if (!data) return "Data não disponível";
-    return new Date(data).toLocaleDateString('pt-BR');
-  };
+ const formatarData = (data) => {
+  if (!data) return "Data não disponível";
+
+  // 🔥 força formato local (evita bug de timezone)
+  const partes = data.split('-');
+  const d = new Date(partes[0], partes[1] - 1, partes[2]);
+
+  return d.toLocaleDateString('pt-BR');
+};
 
   // 🔥 STATUS DINÂMICO (BASEADO NA DATA DA MONITORIA)
   const getStatus = (dataInicio) => {
@@ -101,7 +106,7 @@ export default function HistoricoMonitorias({ navigation }) {
                   </Text>
 
                   <Text style={styles.descricao}>
-                    Monitoria em {item.dataInicio}
+                    Monitoria em {formatarData(item.dataInicio)}
                   </Text>
 
                   <Text style={styles.monitor}>
