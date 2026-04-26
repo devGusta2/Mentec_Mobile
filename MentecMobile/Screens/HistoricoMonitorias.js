@@ -1,10 +1,53 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 
 import Header from '../components/header';
-import CaixaMonitoria from '../components/caixaMonitoria';
 import NavBar from '../components/Navbar';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function HistoricoMonitorias() {
+export default function HistoricoMonitorias({ navigation }) {
+
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
+  const [historico, setHistorico] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchHistorico = async () => {
+    try {
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+      const response = await axios.get(
+        `${API_URL}/agendamentos/historico/${idUser}`,
+        {
+          headers: { Authorization: `Bearer ${TOKEN}` }
+        }
+      );
+
+      setHistorico(response.data);
+
+    } catch (e) {
+      console.log("Erro histórico:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistorico();
+  }, []);
+
+  const formatarData = (data) => {
+    return new Date(data).toLocaleDateString('pt-BR');
+  };
+
   return (
     <View style={styles.containerTela}>
 
@@ -12,48 +55,56 @@ export default function HistoricoMonitorias() {
 
       <View style={styles.container}>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
-          <CaixaMonitoria
-            titulo="React Native"
-            descricao="Monitoria concluída em 20/03"
-            imagem={require('../assets/monitoria1.jpg')}
-            botoes={[
-              { texto: "Material de Apoio", onPress: () => alert("Abrir modal") },
-              { texto: "Feedback", onPress: () => navigation.navigate("Feedback") }
-            ]}
-          />
+          {loading ? (
+            <Text style={styles.info}>Carregando...</Text>
 
-          <CaixaMonitoria
-            titulo="Banco de Dados"
-            descricao="Monitoria concluída em 18/03"
-            imagem={require('../assets/monitoria1.jpg')}
-            botoes={[
-              { texto: "Material", rota: "MaterialApoio" },
-              { texto: "Feedback", onPress: () => navigation.navigate("Feedback") }
-            ]}
-          />
+          ) : historico.length === 0 ? (
+            <Text style={styles.info}>
+              Nenhuma monitoria encontrada
+            </Text>
 
-          <CaixaMonitoria
-            titulo="Java"
-            descricao="Monitoria concluída em 15/03"
-            imagem={require('../assets/monitoria1.jpg')}
-            botoes={[
-              { texto: "Material de Apoio", onPress: () => alert("Abrir modal") },
-              { texto: "Feedback", onPress: () => navigation.navigate("Feedback") }
-            ]}
-          />
+          ) : (
+            historico.map((item, index) => (
+              <View key={index} style={styles.card}>
+
+                <Text style={styles.titulo}>
+                  {item.titulo}
+                </Text>
+
+                <Text style={styles.descricao}>
+                  Monitoria em {formatarData(item.dataAgendamento)}
+                </Text>
+
+                <Text style={styles.monitor}>
+                  Monitor: {item.monitor}
+                </Text>
+
+                <TouchableOpacity
+                  style={styles.botao}
+                  onPress={() =>
+                    navigation.navigate("Feedback", { id: item.id })
+                  }
+                >
+                  <Text style={styles.textBotao}>
+                    Feedback
+                  </Text>
+                </TouchableOpacity>
+
+              </View>
+            ))
+          )}
 
         </ScrollView>
 
       </View>
 
-      <NavBar />
+      <NavBar navigation={navigation} />
 
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
 
@@ -69,6 +120,51 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     marginTop: 10,
     padding: 10,
+  },
+
+  info: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#555',
+  },
+
+  card: {
+    backgroundColor: '#fff',
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 12,
+    elevation: 3,
+  },
+
+  titulo: {
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+
+  descricao: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 5,
+  },
+
+  monitor: {
+    fontSize: 12,
+    color: '#777',
+    marginTop: 5,
+  },
+
+  botao: {
+    backgroundColor: '#770B1C',
+    marginTop: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+
+  textBotao: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 
 });
