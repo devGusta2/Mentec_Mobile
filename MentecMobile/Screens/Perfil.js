@@ -7,8 +7,7 @@ import Header from '../components/header';
 import NavBar from '../components/Navbar';
 
 
-export default function Perfil() {
-  const navigation = useNavigation();
+export default function Perfil({ navigation }) {
 
   return (
     <View style={styles.containerTela}>
@@ -32,18 +31,18 @@ export default function Perfil() {
 
         <View style={styles.containerBotoes}>
           <BotaoPadrao
-            title="HistóricoMonitorias"
+            title="Histórico Monitorias"
             onPress={() => navigation.navigate('HistoricoMonitorias')}
           />
 
           <BotaoPadrao
             title="Configuração"
-            onPress={() => navigation.navigate('conf')}
+            onPress={() => navigation.navigate('Conf')}
           />
         </View>
       </View>
 
-      <NavBar />
+      <NavBar navigation={navigation} />
 
     </View>
   );

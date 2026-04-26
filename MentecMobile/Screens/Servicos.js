@@ -56,6 +56,7 @@ export default function Servicos() {
           imagem={<MaterialIcons name="contact-support" size={60} color="#fff" />}
         />
 
+
       </View>
 
       <View style={styles.footer} />

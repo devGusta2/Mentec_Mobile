@@ -19,6 +19,7 @@ export default function HistoricoMonitorias({ navigation }) {
   const [historico, setHistorico] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔥 BUSCAR HISTÓRICO
   const fetchHistorico = async () => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
@@ -44,8 +45,34 @@ export default function HistoricoMonitorias({ navigation }) {
     fetchHistorico();
   }, []);
 
+  // 🔥 FORMATAR DATA
   const formatarData = (data) => {
-    return new Date(data).toLocaleDateString('pt-BR');
+  if (!data) return "Data não disponível";
+
+  // 🔥 força formato local (evita bug de timezone)
+  const partes = data.split('-');
+  const d = new Date(partes[0], partes[1] - 1, partes[2]);
+
+  return d.toLocaleDateString('pt-BR');
+};
+
+  // 🔥 STATUS DINÂMICO (BASEADO NA DATA DA MONITORIA)
+  const getStatus = (dataInicio) => {
+    if (!dataInicio) return "AGENDADA";
+
+    const hoje = new Date();
+    const data = new Date(dataInicio);
+
+    hoje.setHours(0, 0, 0, 0);
+    data.setHours(0, 0, 0, 0);
+
+    if (data.getTime() === hoje.getTime()) {
+      return "EM_ANDAMENTO";
+    } else if (data < hoje) {
+      return "CONCLUIDA";
+    } else {
+      return "AGENDADA";
+    }
   };
 
   return (
@@ -66,34 +93,64 @@ export default function HistoricoMonitorias({ navigation }) {
             </Text>
 
           ) : (
-            historico.map((item, index) => (
-              <View key={index} style={styles.card}>
+            historico.map((item, index) => {
 
-                <Text style={styles.titulo}>
-                  {item.titulo}
-                </Text>
+              const status = getStatus(item.dataInicio);
 
-                <Text style={styles.descricao}>
-                  Monitoria em {formatarData(item.dataAgendamento)}
-                </Text>
+              return (
+                <View key={index} style={styles.card}>
 
-                <Text style={styles.monitor}>
-                  Monitor: {item.monitor}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.botao}
-                  onPress={() =>
-                    navigation.navigate("Feedback", { id: item.id })
-                  }
-                >
-                  <Text style={styles.textBotao}>
-                    Feedback
+                  <Text style={styles.titulo}>
+                    {item.titulo}
                   </Text>
-                </TouchableOpacity>
 
-              </View>
-            ))
+                  <Text style={styles.descricao}>
+                    Monitoria em {formatarData(item.dataInicio)}
+                  </Text>
+
+                  <Text style={styles.monitor}>
+                    Monitor: {item.monitor}
+                  </Text>
+
+                  {/* 🔥 STATUS */}
+                  <Text style={[
+                    styles.status,
+                    status === "EM_ANDAMENTO" && { color: "#f1c40f" },
+                    status === "CONCLUIDA" && { color: "green" },
+                    status === "AGENDADA" && { color: "#3498db" },
+                  ]}>
+                    {status === "EM_ANDAMENTO" && "🟡 Em andamento"}
+                    {status === "CONCLUIDA" && "🟢 Concluída"}
+                    {status === "AGENDADA" && "🔵 Agendada"}
+                  </Text>
+
+                  <View style={styles.botoes}>
+
+                    <TouchableOpacity
+                      style={styles.botao}
+                      onPress={() => alert("Abrir material")}
+                    >
+                      <Text style={styles.textBotao}>
+                        Material
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[styles.botao, styles.botaoSecundario]}
+                      onPress={() =>
+                        navigation.navigate("Feedback", { id: item.id })
+                      }
+                    >
+                      <Text style={styles.textBotao}>
+                        Feedback
+                      </Text>
+                    </TouchableOpacity>
+
+                  </View>
+
+                </View>
+              );
+            })
           )}
 
         </ScrollView>
@@ -153,12 +210,26 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 
+  status: {
+    marginTop: 5,
+    fontWeight: 'bold',
+  },
+
+  botoes: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+
   botao: {
     backgroundColor: '#770B1C',
-    marginTop: 10,
     paddingVertical: 6,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    alignItems: 'center',
+  },
+
+  botaoSecundario: {
+    backgroundColor: '#999',
   },
 
   textBotao: {

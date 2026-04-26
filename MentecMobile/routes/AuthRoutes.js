@@ -36,7 +36,7 @@ export default function AuthRoutes() {
       <Stack.Screen name="Forum" component={Forum} />
       <Stack.Screen name="SAC" component={SAC} />
       <Stack.Screen name="Feedback" component={Feedback} />
-      <Stack.Screen name="conf" component={conf} />
+      <Stack.Screen name="Conf" component={conf} />
       <Stack.Screen name="VerifyCode" component={VerifyCode} />
       <Stack.Screen name="RecuperarSenha" component={RecuperarSenha} />
     </Stack.Navigator>

@@ -7,62 +7,72 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// ✅ TIPAGEM
+type Monitor = {
+  nome: string;
+  sobrenome: string;
+  especialidades: string;
+};
+
+type Monitoria = {
+  id: number;
+  titulo: string;
+  descricao: string;
+  horario: string;
+  data: string;
+  monitor: Monitor;
+};
+
 export default function ListaMonitorias() {
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Monitoria[]>([]); // ✅ tipado
 
   const insets = useSafeAreaInsets();
   const paddingBottomLista = insets.bottom + 120;
 
-  // 🔥 AGENDAR MONITORIA
-  const matricular = async (monitoriaId: any) => {
+  // 🔥 AGENDAR
+  const matricular = async (monitoriaId: number) => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
       const idUser = await AsyncStorage.getItem('@mentec_userid');
 
       const payload = {
         idAluno: idUser,
-        monitoriaId: monitoriaId
+        monitoriaId: monitoriaId,
       };
 
-      await axios.post(
-        `${API_URL}/agendamentos/agendar`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${TOKEN}`
-          }
-        }
-      );
+      await axios.post(`${API_URL}/agendamentos/agendar`, payload, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      });
 
-      alert("Agendamento efetuado com sucesso!");
-
+      alert('Agendamento efetuado com sucesso!');
     } catch (e: any) {
       console.log(e);
-      alert("Erro ao agendar: " + e?.response?.data?.message);
+      alert('Erro ao agendar: ' + e?.response?.data?.message);
     }
   };
 
-  // 🔥 BUSCAR MONITORIAS
+  // 🔥 BUSCAR
   const fetchMonitorias = async () => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
 
-      const response = await axios.get(
+      const response = await axios.get<Monitoria[]>(
         `${API_URL}/monitorias/listar`,
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`
-          }
+            Authorization: `Bearer ${TOKEN}`,
+          },
         }
       );
 
       setData(response.data);
-
     } catch (e) {
       console.log(e);
-      alert("Erro ao buscar monitorias!");
+      alert('Erro ao buscar monitorias!');
     }
   };
 
@@ -96,20 +106,24 @@ export default function ListaMonitorias() {
           Monitorias que podem lhe interessar:
         </Text>
 
-        {data.map((item: any) => (
+        {data.map((item) => (
           <View key={item.id} style={styles.card}>
-
             <View style={styles.containerInfo}>
               <Text style={styles.titulo}>{item.titulo}</Text>
 
+              <Text style={styles.descricao}>{item.descricao}</Text>
+
+              {/* ✅ CORREÇÃO DO ERRO */}
               <Text style={styles.descricao}>
-                {item.monitor
-                  ? `${item.monitor.nome} ${item.monitor.sobrenome}`
-                  : "Sem monitor"}
+                Monitor: {item.monitor?.nome} {item.monitor?.sobrenome}
               </Text>
 
               <Text style={styles.descricao}>
-                {item.horario ? item.horario.slice(0, 5) : ""}
+                Especialidade: {item.monitor?.especialidades}
+              </Text>
+
+              <Text style={styles.descricao}>
+                Horário: {item.horario}
               </Text>
 
               <Text style={styles.data}>
@@ -129,7 +143,6 @@ export default function ListaMonitorias() {
               style={styles.imagem}
               resizeMode="cover"
             />
-
           </View>
         ))}
       </ScrollView>
