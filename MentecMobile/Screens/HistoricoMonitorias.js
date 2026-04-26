@@ -32,7 +32,6 @@ export default function HistoricoMonitorias({ navigation }) {
         }
       );
 
-      console.log(response.data);
       setHistorico(response.data);
 
     } catch (e) {
@@ -47,7 +46,7 @@ export default function HistoricoMonitorias({ navigation }) {
   }, []);
 
   // 🔥 FORMATAR DATA
- const formatarData = (data) => {
+  const formatarData = (data) => {
   if (!data) return "Data não disponível";
 
   // 🔥 força formato local (evita bug de timezone)
