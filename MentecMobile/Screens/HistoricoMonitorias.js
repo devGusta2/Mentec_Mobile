@@ -32,6 +32,7 @@ export default function HistoricoMonitorias({ navigation }) {
         }
       );
 
+      console.log(response.data);
       setHistorico(response.data);
 
     } catch (e) {
@@ -47,7 +48,27 @@ export default function HistoricoMonitorias({ navigation }) {
 
   // 🔥 FORMATAR DATA
   const formatarData = (data) => {
+    if (!data) return "Data não disponível";
     return new Date(data).toLocaleDateString('pt-BR');
+  };
+
+  // 🔥 STATUS DINÂMICO (BASEADO NA DATA DA MONITORIA)
+  const getStatus = (dataInicio) => {
+    if (!dataInicio) return "AGENDADA";
+
+    const hoje = new Date();
+    const data = new Date(dataInicio);
+
+    hoje.setHours(0, 0, 0, 0);
+    data.setHours(0, 0, 0, 0);
+
+    if (data.getTime() === hoje.getTime()) {
+      return "EM_ANDAMENTO";
+    } else if (data < hoje) {
+      return "CONCLUIDA";
+    } else {
+      return "AGENDADA";
+    }
   };
 
   return (
@@ -68,47 +89,64 @@ export default function HistoricoMonitorias({ navigation }) {
             </Text>
 
           ) : (
-            historico.map((item, index) => (
-              <View key={index} style={styles.card}>
+            historico.map((item, index) => {
 
-                <Text style={styles.titulo}>
-                  {item.titulo}
-                </Text>
+              const status = getStatus(item.dataInicio);
 
-                <Text style={styles.descricao}>
-                  Monitoria concluída em {formatarData(item.dataAgendamento)}
-                </Text>
+              return (
+                <View key={index} style={styles.card}>
 
-                <Text style={styles.monitor}>
-                  Monitor: {item.monitor}
-                </Text>
+                  <Text style={styles.titulo}>
+                    {item.titulo}
+                  </Text>
 
-                <View style={styles.botoes}>
+                  <Text style={styles.descricao}>
+                    Monitoria em {formatarData(item.dataInicio)}
+                  </Text>
 
-                  <TouchableOpacity
-                    style={styles.botao}
-                    onPress={() => alert("Abrir material")}
-                  >
-                    <Text style={styles.textBotao}>
-                      Material
-                    </Text>
-                  </TouchableOpacity>
+                  <Text style={styles.monitor}>
+                    Monitor: {item.monitor}
+                  </Text>
 
-                  <TouchableOpacity
-                    style={[styles.botao, styles.botaoSecundario]}
-                    onPress={() =>
-                      navigation.navigate("Feedback", { id: item.id })
-                    }
-                  >
-                    <Text style={styles.textBotao}>
-                      Feedback
-                    </Text>
-                  </TouchableOpacity>
+                  {/* 🔥 STATUS */}
+                  <Text style={[
+                    styles.status,
+                    status === "EM_ANDAMENTO" && { color: "#f1c40f" },
+                    status === "CONCLUIDA" && { color: "green" },
+                    status === "AGENDADA" && { color: "#3498db" },
+                  ]}>
+                    {status === "EM_ANDAMENTO" && "🟡 Em andamento"}
+                    {status === "CONCLUIDA" && "🟢 Concluída"}
+                    {status === "AGENDADA" && "🔵 Agendada"}
+                  </Text>
+
+                  <View style={styles.botoes}>
+
+                    <TouchableOpacity
+                      style={styles.botao}
+                      onPress={() => alert("Abrir material")}
+                    >
+                      <Text style={styles.textBotao}>
+                        Material
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[styles.botao, styles.botaoSecundario]}
+                      onPress={() =>
+                        navigation.navigate("Feedback", { id: item.id })
+                      }
+                    >
+                      <Text style={styles.textBotao}>
+                        Feedback
+                      </Text>
+                    </TouchableOpacity>
+
+                  </View>
 
                 </View>
-
-              </View>
-            ))
+              );
+            })
           )}
 
         </ScrollView>
@@ -166,6 +204,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#777',
     marginTop: 5,
+  },
+
+  status: {
+    marginTop: 5,
+    fontWeight: 'bold',
   },
 
   botoes: {
