@@ -32,7 +32,7 @@ export default function Pesquisar() {
 
 const styles = StyleSheet.create({
   containerPesq: {
-    flexDirection: 'column', // ✅ corrigido
+    flexDirection: 'column', 
     backgroundColor: '#770B1C',
     width: '100%',
     alignItems: 'center',

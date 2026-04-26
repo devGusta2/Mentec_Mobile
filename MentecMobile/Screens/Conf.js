@@ -7,14 +7,14 @@ import NavBar from '../components/Navbar';
 import OptionCard from '../components/OptionCard';
 import AvatarModal from '../components/AvatarModal';
 
-// Obs: Coloque uma imagem padrão em /assets
+
 import defaultAvatar from '../assets/psi.jpg';
 
 export default function ProfileScreen({ navigation }) {
   const [avatar, setAvatar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Função para trocar a foto
+
   const pickImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) return;
@@ -31,7 +31,7 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* HEADER */}
+  
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.avatarWrapper}
@@ -49,7 +49,6 @@ export default function ProfileScreen({ navigation }) {
         </View>
       </View>
 
-      {/* CARDS DE OPÇÕES */}
       <View style={styles.cardsContainer}>
 
       <OptionCard
@@ -82,7 +81,6 @@ export default function ProfileScreen({ navigation }) {
 
       </View>
 
-      {/* MODAL DO AVATAR (estilo WhatsApp) */}
       <AvatarModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -103,7 +101,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#EAEAEA",
   },
 
-  /* HEADER */
   header: {
     backgroundColor: "#800010",
     height: 180,

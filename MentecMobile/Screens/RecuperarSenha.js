@@ -19,14 +19,14 @@ export default function RecuperarSenha() {
       return;
     }
 
-    setLoading(true); // Inicia loading
+    setLoading(true); 
     try {
       await axios.post(`${API_URL}/email/esqueciMinhaSenha`, { email });
       setModalCodigoVisible(true);
     } catch (e) {
       alert("Erro ao enviar código: " + (e.message || ""));
     } finally {
-      setLoading(false); // Para loading
+      setLoading(false); 
     }
   };
 
@@ -35,7 +35,7 @@ export default function RecuperarSenha() {
       alert("Digite o código recebido por email");
       return;
     }
-    // Aqui você poderia validar o código no backend, mas vamos abrir o modal de senha
+
     setModalCodigoVisible(false);
     setModalSenhaVisible(true);
   };

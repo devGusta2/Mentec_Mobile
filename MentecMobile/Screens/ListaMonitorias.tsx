@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// ✅ TIPAGEM
+
 type Monitor = {
   nome: string;
   sobrenome: string;
@@ -26,12 +26,11 @@ type Monitoria = {
 export default function ListaMonitorias() {
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-  const [data, setData] = useState<Monitoria[]>([]); // ✅ tipado
+  const [data, setData] = useState<Monitoria[]>([]); 
 
   const insets = useSafeAreaInsets();
   const paddingBottomLista = insets.bottom + 120;
 
-  // 🔥 AGENDAR
   const matricular = async (monitoriaId: number) => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
@@ -55,7 +54,7 @@ export default function ListaMonitorias() {
     }
   };
 
-  // 🔥 BUSCAR
+
   const fetchMonitorias = async () => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
@@ -84,17 +83,17 @@ export default function ListaMonitorias() {
     <View style={styles.tela}>
       <StatusBar style="light" />
 
-      {/* HEADER */}
+   
       <View style={[styles.faixaTopo, { paddingTop: insets.top }]}>
         <Text style={styles.logoMentec}>Mentec</Text>
       </View>
 
-      {/* BUSCA */}
+ 
       <View style={styles.buscaEnv}>
         <Pesquisar />
       </View>
 
-      {/* LISTA */}
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
@@ -113,7 +112,7 @@ export default function ListaMonitorias() {
 
               <Text style={styles.descricao}>{item.descricao}</Text>
 
-              {/* ✅ CORREÇÃO DO ERRO */}
+        
               <Text style={styles.descricao}>
                 Monitor: {item.monitor?.nome} {item.monitor?.sobrenome}
               </Text>

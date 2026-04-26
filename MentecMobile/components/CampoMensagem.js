@@ -1,6 +1,5 @@
 import { Text, View, StyleSheet, Image, TextInput, Pressable} from 'react-native';
 
-// import Entypo from '@expo/vector-icons/Entypo';
 import BotaoPadrao from "./BotaoPadrao";
 
 export default function CampoMensagem({ title, onPress }) {

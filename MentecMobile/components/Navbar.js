@@ -12,7 +12,7 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     await logout();
-    navigation.navigate('Inicio'); // volta pra tela inicial
+    navigation.navigate('Inicio'); 
   };
   return (
     <View style={styles.containerNavBar}>

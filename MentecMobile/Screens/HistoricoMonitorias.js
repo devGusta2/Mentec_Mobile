@@ -19,7 +19,7 @@ export default function HistoricoMonitorias({ navigation }) {
   const [historico, setHistorico] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 BUSCAR HISTÓRICO
+
   const fetchHistorico = async () => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
@@ -45,18 +45,18 @@ export default function HistoricoMonitorias({ navigation }) {
     fetchHistorico();
   }, []);
 
-  // 🔥 FORMATAR DATA
+
   const formatarData = (data) => {
   if (!data) return "Data não disponível";
 
-  // 🔥 força formato local (evita bug de timezone)
+
   const partes = data.split('-');
   const d = new Date(partes[0], partes[1] - 1, partes[2]);
 
   return d.toLocaleDateString('pt-BR');
 };
 
-  // 🔥 STATUS DINÂMICO (BASEADO NA DATA DA MONITORIA)
+
   const getStatus = (dataInicio) => {
     if (!dataInicio) return "AGENDADA";
 
@@ -112,7 +112,6 @@ export default function HistoricoMonitorias({ navigation }) {
                     Monitor: {item.monitor}
                   </Text>
 
-                  {/* 🔥 STATUS */}
                   <Text style={[
                     styles.status,
                     status === "EM_ANDAMENTO" && { color: "#f1c40f" },

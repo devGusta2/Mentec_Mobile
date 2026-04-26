@@ -91,7 +91,7 @@ export default function Feedback() {
         </View>
       </ScrollView>
 
-      {/* Navbar corrigida */}
+
       <NavBar />
 
     </View>

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#770B1C',
     width: '100%',
-    height: 180, // melhor que %
+    height: 180, 
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomLeftRadius: 45,

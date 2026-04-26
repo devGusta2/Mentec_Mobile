@@ -19,7 +19,7 @@ export default function Cronograma({ navigation }) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [agendamentos, setAgendamentos] = useState([]);
 
-  // 🔥 AGORA BUSCA DIRETO O CRONOGRAMA
+
   const fetchCronograma = async () => {
     try {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
@@ -43,7 +43,6 @@ export default function Cronograma({ navigation }) {
     fetchCronograma();
   }, []);
 
-  // 🔥 MARCAR DATAS
   const markedDates = {};
 
   agendamentos.forEach((item) => {
@@ -61,7 +60,7 @@ export default function Cronograma({ navigation }) {
     };
   }
 
-  // 🔥 FILTRAR EVENTOS
+
   const eventosDoDia = agendamentos.filter(
     (a) => a.data === selectedDate
   );
