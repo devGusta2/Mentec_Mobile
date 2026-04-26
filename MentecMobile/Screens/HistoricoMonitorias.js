@@ -101,7 +101,7 @@ export default function HistoricoMonitorias({ navigation }) {
                   </Text>
 
                   <Text style={styles.descricao}>
-                    Monitoria em {formatarData(item.dataInicio)}
+                    Monitoria em {item.dataInicio}
                   </Text>
 
                   <Text style={styles.monitor}>
