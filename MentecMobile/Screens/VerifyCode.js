@@ -59,7 +59,7 @@ const verifyCode = async (receivedCode) => {
 
         if (response.status === 200) {
             alert("✅ Código verificado com sucesso!");
-            // navigation.navigate("ProximaTela");
+            navigation.navigate("Inicio");
         }
 
     } catch (e) {

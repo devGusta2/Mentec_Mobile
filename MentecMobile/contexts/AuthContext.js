@@ -51,6 +51,7 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
+    navigation.navigate('Inicio'); 
     await AsyncStorage.clear();
     setUser(null);
   }

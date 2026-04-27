@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 
 export function EstudanteRoutes() {
   return (
-    <Stack.Navigator  initialRouteName="ListaMonitorias" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator  initialRouteName="Servicos" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Servicos" component={Servicos} />
       <Stack.Screen name="ListaMonitorias" component={ListaMonitorias} />
       <Stack.Screen name="Cronograma" component={Cronograma} />
