@@ -13,17 +13,16 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
-import { AuthContext } from '../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SAC({ navigation }) {
-  const { user } = useContext(AuthContext);
+
   const [tipo, setTipo] = useState('OUTROS');
   const [descricao, setDescricao] = useState('');
   const [loading, setLoading] = useState(false);
 
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
-  const IDUSUARIO = AsyncStorage.getItem('@mentec_userid')
+
 
   const handleEnviar = async () => {
     if (!descricao.trim()) {
