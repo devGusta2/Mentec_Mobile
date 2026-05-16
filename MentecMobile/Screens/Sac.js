@@ -14,6 +14,7 @@ import { Picker } from '@react-native-picker/picker';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SAC({ navigation }) {
   const { user } = useContext(AuthContext);
@@ -22,6 +23,7 @@ export default function SAC({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const IDUSUARIO = AsyncStorage.getItem('@mentec_userid')
 
   const handleEnviar = async () => {
     if (!descricao.trim()) {
@@ -30,15 +32,20 @@ export default function SAC({ navigation }) {
     }
 
     setLoading(true);
+
     try {
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
       const payload = {
+        usuarioId: idUser,
         tipo: tipo,
         descricao: descricao,
 
       };
+      console.log("Enviando payload para o backend:", payload);
 
-      await axios.post(`${API_URL}/sac`, payload, {
-        headers: { Authorization: `Bearer ${user.token}` }
+      await axios.post(`${API_URL}/sac/criar`, payload, {
+        headers: { Authorization: `Bearer ${TOKEN}` }
       });
 
       Alert.alert("Sucesso", "Sua mensagem foi enviada ao gestor com sucesso!");
