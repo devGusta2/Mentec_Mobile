@@ -1,22 +1,23 @@
-import { Text, View, StyleSheet, Image } from 'react-native';
-
-
+import { Text, View, StyleSheet } from 'react-native';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
 export default function CaixaInform() {
+  const { nome, email, telefone } = useContext(UserContext);
+
   return (
     <View style={styles.containerCaixa}>
       <View style={styles.textoContainer}>
         <Text style={styles.titulo}>Informações</Text>
+        {nome ? <Text style={styles.descricao}>Nome: {nome}</Text> : null}
         <Text style={styles.descricao}>
-        E-mail: loremipsumeutristique@fatec.sp.gov.br
+          E-mail: {email || 'Não informado'}
         </Text>
         <Text style={styles.descricao}>
-        Telefone: (11) 900000000
+          Telefone: {telefone || 'Não informado'}
         </Text>
-
       </View>
-
-</View>
+    </View>
   );
 }
 
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     width: 300,
-    height: 100,
+    minHeight: 100,
     alignSelf: 'center',
     marginVertical: 5,
     borderRadius: 10,
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
   descricao: {
     color: 'black',
     fontSize: 11,
-    marginBottom: 15,
+    marginBottom: 4,
   },
-  
 });

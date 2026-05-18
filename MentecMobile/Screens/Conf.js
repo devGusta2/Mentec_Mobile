@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
@@ -9,10 +10,18 @@ import AvatarModal from '../components/AvatarModal';
 
 // Obs: Coloque uma imagem padrão em /assets
 import defaultAvatar from '../assets/psi.jpg';
+import { UserContext } from '../contexts/UserContext';
 
 export default function ProfileScreen({ navigation }) {
+  const { nome, loadDados } = useContext(UserContext);
   const [avatar, setAvatar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadDados();
+    }, [loadDados])
+  );
 
   // Função para trocar a foto
   const pickImage = async () => {
@@ -44,7 +53,7 @@ export default function ProfileScreen({ navigation }) {
         </TouchableOpacity>
 
         <View>
-          <Text style={styles.name}>Paulo Henrique</Text>
+          <Text style={styles.name}>{nome || 'Usuário'}</Text>
           <Text style={styles.company}>Mentec</Text>
         </View>
       </View>
@@ -56,7 +65,7 @@ export default function ProfileScreen({ navigation }) {
           icon={<Ionicons name="settings-sharp" size={28} color="#800010" />}
           title="Conta"
           subtitle="Alteração de número, Atualização de email"
-          onPress={() => alert('Configurações')}
+          onPress={() => navigation.navigate('ConfigConta')}
         />
 
         <OptionCard

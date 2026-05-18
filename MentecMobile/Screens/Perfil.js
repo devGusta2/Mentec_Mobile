@@ -1,14 +1,22 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useCallback, useContext } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import BotaoPadrao from '../components/BotaoPadrao';
 import CaixaInform from '../components/CaixaInform';
 import Header from '../components/header';
 import NavBar from '../components/Navbar';
-
+import { UserContext } from '../contexts/UserContext';
 
 export default function Perfil() {
   const navigation = useNavigation();
+  const { loadDados } = useContext(UserContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadDados();
+    }, [loadDados])
+  );
 
   return (
     <View style={styles.containerTela}>

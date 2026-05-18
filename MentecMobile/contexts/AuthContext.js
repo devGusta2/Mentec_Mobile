@@ -38,6 +38,7 @@ export function AuthProvider({ children }) {
       await AsyncStorage.setItem('@mentec_token', response.data.accessToken);
       await AsyncStorage.setItem('@mentec_role', response.data.role);
       await AsyncStorage.setItem('@mentec_userid', response.data.idUser);
+      await AsyncStorage.setItem('@mentec_user_email', credentials.email);
       console.log(response.data)
       setUser({
         token: response.data.accessToken,
