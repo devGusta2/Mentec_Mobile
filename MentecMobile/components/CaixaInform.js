@@ -1,22 +1,18 @@
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 
-
-
-export default function CaixaInform() {
+export default function CaixaInform({ email, telefone }) {
   return (
     <View style={styles.containerCaixa}>
       <View style={styles.textoContainer}>
         <Text style={styles.titulo}>Informações</Text>
         <Text style={styles.descricao}>
-        E-mail: loremipsumeutristique@fatec.sp.gov.br
+          E-mail: {email || 'Não informado'}
         </Text>
         <Text style={styles.descricao}>
-        Telefone: (11) 900000000
+          Telefone: {telefone || 'Não informado'}
         </Text>
-
       </View>
-
-</View>
+    </View>
   );
 }
 
@@ -52,5 +48,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     marginBottom: 15,
   },
-  
 });
