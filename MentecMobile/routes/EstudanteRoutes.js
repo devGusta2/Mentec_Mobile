@@ -17,7 +17,7 @@ export function EstudanteRoutes() {
       <Stack.Screen name="ListaMonitorias" component={ListaMonitorias} />
       <Stack.Screen name="Cronograma" component={Cronograma} />
       <Stack.Screen name="Perfil" component={Perfil} />
-      <Stack.Screen name="Conf" component={Conf} />
+      {/* <Stack.Screen name="Conf" component={Conf} /> */}
       <Stack.Screen name="HistoricoMonitorias" component={HistoricoMonitorias} />
       <Stack.Screen name="Forum" component={Forum} />
 
