@@ -31,7 +31,7 @@ export default function Perfil({ navigation }) {
         return;
       }
 
-      const response = await axios.get(`${API_URL}/info/${idUser}`, {
+      const response = await axios.get(`${API_URL}/usuarios/info/${idUser}`, {
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
 
