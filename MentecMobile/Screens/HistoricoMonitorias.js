@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   StyleSheet,
   Text,
@@ -11,6 +12,7 @@ import Header from '../components/header';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { feedbackJaEnviado } from '../Utils/feedbackStorage';
 
 export default function HistoricoMonitorias({ navigation }) {
 
@@ -18,6 +20,7 @@ export default function HistoricoMonitorias({ navigation }) {
 
   const [historico, setHistorico] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [feedbacksEnviados, setFeedbacksEnviados] = useState({});
 
 
   const fetchHistorico = async () => {
@@ -34,6 +37,8 @@ export default function HistoricoMonitorias({ navigation }) {
 
       setHistorico(response.data);
 
+      await atualizarStatusFeedbacks(response.data);
+
     } catch (e) {
       console.log("Erro histórico:", e);
     } finally {
@@ -41,9 +46,28 @@ export default function HistoricoMonitorias({ navigation }) {
     }
   };
 
+  const atualizarStatusFeedbacks = useCallback(async (lista) => {
+    const alunoId = await AsyncStorage.getItem('@mentec_userid');
+    const enviados = {};
+    for (const item of lista) {
+      if (item?.id != null) {
+        enviados[item.id] = await feedbackJaEnviado(item.id, alunoId);
+      }
+    }
+    setFeedbacksEnviados(enviados);
+  }, []);
+
   useEffect(() => {
     fetchHistorico();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (historico.length > 0) {
+        atualizarStatusFeedbacks(historico);
+      }
+    }, [historico, atualizarStatusFeedbacks])
+  );
 
 
   const formatarData = (data) => {
@@ -134,16 +158,28 @@ export default function HistoricoMonitorias({ navigation }) {
                       </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                      style={[styles.botao, styles.botaoSecundario]}
-                      onPress={() =>
-                        navigation.navigate("Feedback", { id: item.id })
-                      }
-                    >
-                      <Text style={styles.textBotao}>
-                        Feedback
-                      </Text>
-                    </TouchableOpacity>
+                    {status === 'CONCLUIDA' ? (
+                      <TouchableOpacity
+                        style={[
+                          styles.botao,
+                          styles.botaoSecundario,
+                          feedbacksEnviados[item.id] && styles.botaoEnviado,
+                        ]}
+                        onPress={() =>
+                          navigation.navigate('Feedback', {
+                            monitoriaId: item.id,
+                            titulo: item.titulo,
+                            monitor: item.monitor,
+                          })
+                        }
+                      >
+                        <Text style={styles.textBotao}>
+                          {feedbacksEnviados[item.id]
+                            ? 'Ver feedback'
+                            : 'Feedback'}
+                        </Text>
+                      </TouchableOpacity>
+                    ) : null}
 
                   </View>
 
@@ -229,6 +265,10 @@ const styles = StyleSheet.create({
 
   botaoSecundario: {
     backgroundColor: '#999',
+  },
+
+  botaoEnviado: {
+    backgroundColor: '#2e7d32',
   },
 
   textBotao: {

@@ -6,8 +6,9 @@ import ListaMonitorias from "../Screens/ListaMonitorias";
 // import Forum from "../Screens/Forum";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HistoricoMonitorias from "../Screens/HistoricoMonitorias";
+import Feedback from "../Screens/Feedback";
 import Forum from "../Screens/Forum";
-import Conf from '../Screens/Conf'
+import Conf from '../Screens/Conf';
 const Stack = createNativeStackNavigator();
 
 export function EstudanteRoutes() {
@@ -19,6 +20,7 @@ export function EstudanteRoutes() {
       <Stack.Screen name="Perfil" component={Perfil} />
       <Stack.Screen name="Conf" component={Conf} />
       <Stack.Screen name="HistoricoMonitorias" component={HistoricoMonitorias} />
+      <Stack.Screen name="Feedback" component={Feedback} />
       <Stack.Screen name="Forum" component={Forum} />
 
     </Stack.Navigator>
