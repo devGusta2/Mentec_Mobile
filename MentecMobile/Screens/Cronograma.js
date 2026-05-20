@@ -11,6 +11,7 @@ import { Calendar } from 'react-native-calendars';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { registrarLembretesMonitoria } from '../Utils/notificacoes';
 
 export default function Cronograma({ navigation }) {
 
@@ -33,6 +34,7 @@ export default function Cronograma({ navigation }) {
       );
 
       setAgendamentos(response.data);
+      await registrarLembretesMonitoria(response.data);
 
     } catch (e) {
       console.log("Erro cronograma", e);

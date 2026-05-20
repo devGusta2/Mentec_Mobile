@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Image,
   Modal,
+  ScrollView,
   StyleSheet,
   Switch,
   Text,
@@ -9,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -18,6 +19,15 @@ import OptionCard from "../components/OptionCard";
 import AvatarModal from "../components/AvatarModal";
 
 import defaultAvatar from "../assets/psi.jpg";
+import {
+  STORAGE_KEYS,
+  carregarPreferencias,
+  formatarDataHistorico,
+  limparHistorico,
+  obterHistorico,
+  setAntecedencia,
+  setCategoriaAtiva,
+} from "../Utils/notificacoes";
 
 const fonteLabels = {
   pequeno: "Pequena",
@@ -36,6 +46,11 @@ export default function ProfileScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [configModal, setConfigModal] = useState(null);
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(true);
+  const [notifMonitorias, setNotifMonitorias] = useState(true);
+  const [notifForum, setNotifForum] = useState(true);
+  const [notifSac, setNotifSac] = useState(true);
+  const [antecedencia, setAntecedenciaState] = useState("1h");
+  const [historico, setHistorico] = useState([]);
   const [fonte, setFonte] = useState("medio");
 
   const scaleFont = (size) => Math.round(size * fonteEscala[fonte]);
@@ -48,16 +63,22 @@ export default function ProfileScreen({ navigation }) {
   };
 
   const loadPreferencias = async () => {
-    const notificacoes = await AsyncStorage.getItem("@mentec_notificacoes");
+    const prefs = await carregarPreferencias();
+    setNotificacoesAtivas(prefs.ativas);
+    setNotifMonitorias(prefs.monitorias);
+    setNotifForum(prefs.forum);
+    setNotifSac(prefs.sac);
+    setAntecedenciaState(prefs.antecedencia);
+
     const fonteSalva = await AsyncStorage.getItem("@mentec_fonte");
-
-    if (notificacoes !== null) {
-      setNotificacoesAtivas(notificacoes === "true");
-    }
-
     if (fonteSalva) {
       setFonte(fonteSalva);
     }
+  };
+
+  const loadHistorico = async () => {
+    const lista = await obterHistorico();
+    setHistorico(lista);
   };
 
   const pickImage = async () => {
@@ -78,7 +99,22 @@ export default function ProfileScreen({ navigation }) {
 
   const toggleNotificacoes = async (value) => {
     setNotificacoesAtivas(value);
-    await AsyncStorage.setItem("@mentec_notificacoes", String(value));
+    await AsyncStorage.setItem(STORAGE_KEYS.ativas, String(value));
+  };
+
+  const toggleCategoria = async (categoria, value, setter) => {
+    setter(value);
+    await setCategoriaAtiva(categoria, value);
+  };
+
+  const selecionarAntecedencia = async (value) => {
+    setAntecedenciaState(value);
+    await setAntecedencia(value);
+  };
+
+  const handleLimparHistorico = async () => {
+    await limparHistorico();
+    setHistorico([]);
   };
 
   const selecionarFonte = async (value) => {
@@ -90,6 +126,12 @@ export default function ProfileScreen({ navigation }) {
     loadAvatar();
     loadPreferencias();
   }, []);
+
+  useEffect(() => {
+    if (configModal === "notificacoes") {
+      loadHistorico();
+    }
+  }, [configModal]);
 
   const textSize = {
     name: { fontSize: scaleFont(20) },
@@ -140,29 +182,164 @@ export default function ProfileScreen({ navigation }) {
     }
 
     if (configModal === "notificacoes") {
+      const switchProps = {
+        trackColor: { false: "#ddd", true: "#b04a58" },
+        disabled: !notificacoesAtivas,
+      };
+
       return (
-        <>
+        <ScrollView
+          style={styles.modalScroll}
+          showsVerticalScrollIndicator={false}
+        >
           <Text style={[styles.modalTitle, textSize.modalTitle]}>
             Notificações
           </Text>
+
           <View style={styles.settingRow}>
             <View style={styles.settingText}>
               <Text style={[styles.settingTitle, textSize.settingTitle]}>
                 Receber notificações
               </Text>
               <Text style={[styles.modalText, textSize.modalText]}>
-                Avisos sobre monitorias, agenda e atualizações.
+                {notificacoesAtivas
+                  ? "Avisos sobre monitorias, agenda e atualizações neste dispositivo."
+                  : "Você não verá pop-ups de aviso neste dispositivo."}
               </Text>
             </View>
-
             <Switch
               value={notificacoesAtivas}
               onValueChange={toggleNotificacoes}
-              trackColor={{ false: "#ddd", true: "#b04a58" }}
+              trackColor={switchProps.trackColor}
               thumbColor={notificacoesAtivas ? "#800010" : "#f4f3f4"}
             />
           </View>
-        </>
+
+          <Text style={[styles.sectionLabel, textSize.settingTitle]}>
+            Tipos de aviso
+          </Text>
+
+          <View style={styles.settingRow}>
+            <Text style={[styles.settingTitle, textSize.settingTitle]}>
+              Monitorias e cronograma
+            </Text>
+            <Switch
+              value={notifMonitorias}
+              onValueChange={(v) =>
+                toggleCategoria("monitorias", v, setNotifMonitorias)
+              }
+              {...switchProps}
+              thumbColor={notifMonitorias ? "#800010" : "#f4f3f4"}
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <Text style={[styles.settingTitle, textSize.settingTitle]}>
+              Fórum
+            </Text>
+            <Switch
+              value={notifForum}
+              onValueChange={(v) => toggleCategoria("forum", v, setNotifForum)}
+              {...switchProps}
+              thumbColor={notifForum ? "#800010" : "#f4f3f4"}
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <Text style={[styles.settingTitle, textSize.settingTitle]}>
+              SAC
+            </Text>
+            <Switch
+              value={notifSac}
+              onValueChange={(v) => toggleCategoria("sac", v, setNotifSac)}
+              {...switchProps}
+              thumbColor={notifSac ? "#800010" : "#f4f3f4"}
+            />
+          </View>
+
+          <Text style={[styles.sectionLabel, textSize.settingTitle]}>
+            Lembrete antes da monitoria
+          </Text>
+          <View style={styles.fontOptions}>
+            <TouchableOpacity
+              style={[
+                styles.fontButton,
+                antecedencia === "1h" && styles.fontButtonSelected,
+                !notificacoesAtivas && styles.optionDisabled,
+              ]}
+              disabled={!notificacoesAtivas}
+              onPress={() => selecionarAntecedencia("1h")}
+            >
+              <Text
+                style={[
+                  styles.fontButtonText,
+                  textSize.fontOption,
+                  antecedencia === "1h" && styles.fontButtonTextSelected,
+                ]}
+              >
+                1 hora antes
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.fontButton,
+                antecedencia === "1d" && styles.fontButtonSelected,
+                !notificacoesAtivas && styles.optionDisabled,
+              ]}
+              disabled={!notificacoesAtivas}
+              onPress={() => selecionarAntecedencia("1d")}
+            >
+              <Text
+                style={[
+                  styles.fontButtonText,
+                  textSize.fontOption,
+                  antecedencia === "1d" && styles.fontButtonTextSelected,
+                ]}
+              >
+                1 dia antes
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.hintText, textSize.modalText]}>
+            Preferência salva para lembretes futuros no histórico.
+          </Text>
+
+          <Text style={[styles.sectionLabel, textSize.settingTitle]}>
+            Últimos avisos
+          </Text>
+          {historico.length === 0 ? (
+            <Text style={[styles.modalText, textSize.modalText]}>
+              Nenhum aviso registrado ainda.
+            </Text>
+          ) : (
+            historico.map((item) => (
+              <View key={item.id} style={styles.historicoItem}>
+                <Text style={[styles.historicoTitulo, textSize.settingTitle]}>
+                  {item.titulo}
+                </Text>
+                {item.subtitulo ? (
+                  <Text style={[styles.modalText, textSize.modalText]}>
+                    {item.subtitulo}
+                  </Text>
+                ) : null}
+                <Text style={styles.historicoData}>
+                  {formatarDataHistorico(item.data)}
+                </Text>
+              </View>
+            ))
+          )}
+
+          {historico.length > 0 && (
+            <TouchableOpacity
+              style={[styles.modalButton, styles.secondaryButton]}
+              onPress={handleLimparHistorico}
+            >
+              <Text style={[styles.secondaryButtonText, textSize.button]}>
+                Limpar histórico
+              </Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       );
     }
 
@@ -254,15 +431,6 @@ export default function ProfileScreen({ navigation }) {
           titleStyle={textSize.cardTitle}
           subtitleStyle={textSize.cardSubtitle}
           onPress={() => setConfigModal("fonte")}
-        />
-
-        <OptionCard
-          icon={<MaterialIcons name="help-outline" size={30} color="#800010" />}
-          title="Ajuda e avaliação"
-          subtitle="Fale conosco, política de privacidade"
-          titleStyle={textSize.cardTitle}
-          subtitleStyle={textSize.cardSubtitle}
-          onPress={() => navigation.navigate("Feedback")}
         />
       </View>
 
@@ -360,8 +528,47 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "100%",
     maxWidth: 360,
+    maxHeight: "85%",
     borderRadius: 16,
     padding: 20,
+  },
+
+  modalScroll: {
+    maxHeight: 480,
+  },
+
+  sectionLabel: {
+    color: "#111",
+    fontWeight: "bold",
+    marginTop: 18,
+    marginBottom: 8,
+  },
+
+  hintText: {
+    color: "#888",
+    marginTop: 8,
+  },
+
+  historicoItem: {
+    backgroundColor: "#f5f5f5",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 8,
+  },
+
+  historicoTitulo: {
+    color: "#111",
+    fontWeight: "bold",
+  },
+
+  historicoData: {
+    color: "#888",
+    fontSize: 11,
+    marginTop: 4,
+  },
+
+  optionDisabled: {
+    opacity: 0.45,
   },
 
   closeBtn: {

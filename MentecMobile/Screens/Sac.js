@@ -6,7 +6,6 @@ import {
   TextInput, 
   TouchableOpacity, 
   ScrollView, 
-  Alert,
   ActivityIndicator,
   SafeAreaView
 } from 'react-native';
@@ -14,6 +13,12 @@ import { Picker } from '@react-native-picker/picker';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  CATEGORIAS,
+  adicionarAoHistorico,
+  mostrarAlerta,
+  mostrarAlertaSempre,
+} from '../Utils/notificacoes';
 
 export default function SAC({ navigation }) {
 
@@ -26,7 +31,7 @@ export default function SAC({ navigation }) {
 
   const handleEnviar = async () => {
     if (!descricao.trim()) {
-      Alert.alert("Erro", "Por favor, descreva sua sugestão.");
+      mostrarAlertaSempre("Erro", "Por favor, descreva sua sugestão.");
       return;
     }
 
@@ -47,12 +52,20 @@ export default function SAC({ navigation }) {
         headers: { Authorization: `Bearer ${TOKEN}` }
       });
 
-      Alert.alert("Sucesso", "Sua mensagem foi enviada ao gestor com sucesso!");
+      await adicionarAoHistorico(
+        "SAC enviado",
+        "Sua mensagem foi registrada com sucesso"
+      );
+      await mostrarAlerta(
+        "Sucesso",
+        "Sua mensagem foi enviada ao gestor com sucesso!",
+        CATEGORIAS.SAC
+      );
       setDescricao('');
       setTipo('OUTROS');
     } catch (error) {
       console.error("Erro ao enviar SAC:", error);
-      Alert.alert("Erro", "Não foi possível enviar sua mensagem.");
+      mostrarAlertaSempre("Erro", "Não foi possível enviar sua mensagem.");
     } finally {
       setLoading(false);
     }

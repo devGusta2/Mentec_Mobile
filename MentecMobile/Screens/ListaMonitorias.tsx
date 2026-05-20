@@ -6,6 +6,12 @@ import NavBar from '../components/Navbar';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  CATEGORIAS,
+  adicionarAoHistorico,
+  mostrarAlerta,
+  mostrarAlertaSempre,
+} from '../Utils/notificacoes';
 
 
 type Monitor = {
@@ -47,10 +53,18 @@ export default function ListaMonitorias() {
         },
       });
 
-      alert('Agendamento efetuado com sucesso!');
+      await adicionarAoHistorico('Monitoria agendada', 'Agendamento confirmado');
+      await mostrarAlerta(
+        'Sucesso',
+        'Agendamento efetuado com sucesso!',
+        CATEGORIAS.MONITORIAS
+      );
     } catch (e: any) {
       console.log(e);
-      alert('Erro ao agendar: ' + e?.response?.data?.message);
+      mostrarAlertaSempre(
+        'Erro',
+        'Erro ao agendar: ' + (e?.response?.data?.message || '')
+      );
     }
   };
 
@@ -71,7 +85,7 @@ export default function ListaMonitorias() {
       setData(response.data);
     } catch (e) {
       console.log(e);
-      alert('Erro ao buscar monitorias!');
+      mostrarAlertaSempre('Erro', 'Erro ao buscar monitorias!');
     }
   };
 

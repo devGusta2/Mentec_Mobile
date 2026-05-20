@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image, Modal, Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image, Modal } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -9,6 +9,12 @@ import NavBar from '../components/Navbar';
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  CATEGORIAS,
+  adicionarAoHistorico,
+  mostrarAlerta,
+  mostrarAlertaSempre,
+} from '../Utils/notificacoes';
 
 export default function Forum({ navigation }) {
 
@@ -74,7 +80,8 @@ export default function Forum({ navigation }) {
         }
       );
 
-      Alert.alert('Sucesso', 'Tópico criado com sucesso!');
+      await adicionarAoHistorico('Novo tópico', titulo);
+      await mostrarAlerta('Sucesso', 'Tópico criado com sucesso!', CATEGORIAS.FORUM);
 
       setTitulo('');
       setDescricao('');
@@ -87,7 +94,7 @@ export default function Forum({ navigation }) {
 
       console.log(error);
 
-      Alert.alert('Erro', 'Não foi possível criar o tópico');
+      mostrarAlertaSempre('Erro', 'Não foi possível criar o tópico');
 
     }
   };
@@ -124,13 +131,16 @@ export default function Forum({ navigation }) {
         [idTopico]: '',
       });
 
+      await adicionarAoHistorico('Comentário publicado', 'No fórum');
+      await mostrarAlerta('Sucesso', 'Comentário enviado!', CATEGORIAS.FORUM);
+
       fetchTopicos();
 
     } catch (error) {
 
       console.log(error);
 
-      Alert.alert('Erro', 'Não foi possível comentar');
+      mostrarAlertaSempre('Erro', 'Não foi possível comentar');
 
     }
   };
