@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
-
+import { Alert, Platform } from 'react-native';
 export const CATEGORIAS = {
   MONITORIAS: 'monitorias',
   FORUM: 'forum',
@@ -49,12 +49,17 @@ export async function podeNotificar(categoria = null) {
 }
 
 export async function mostrarAlerta(titulo, mensagem, categoria = null) {
-  if (!(await podeNotificar(categoria))) return;
-  Alert.alert(titulo, mensagem);
-}
 
+  if (!(await podeNotificar(categoria))) return;
+
+  if (Platform.OS === 'web') {
+    alert(`${titulo}\n${mensagem}`);
+  } else {
+    Alert.alert(titulo, mensagem);
+  }
+}
 export async function mostrarAlertaSempre(titulo, mensagem) {
-  Alert.alert(titulo, mensagem);
+alert(`${titulo}\n${mensagem}`);
 }
 
 export async function adicionarAoHistorico(titulo, subtitulo = '') {

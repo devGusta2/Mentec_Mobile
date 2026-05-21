@@ -39,6 +39,7 @@ export default function ListaMonitorias() {
 
   const matricular = async (monitoriaId: number) => {
     try {
+    
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
       const idUser = await AsyncStorage.getItem('@mentec_userid');
 
@@ -54,11 +55,10 @@ export default function ListaMonitorias() {
       });
 
       await adicionarAoHistorico('Monitoria agendada', 'Agendamento confirmado');
-      await mostrarAlerta(
-        'Sucesso',
-        'Agendamento efetuado com sucesso!',
-        CATEGORIAS.MONITORIAS
-      );
+ mostrarAlertaSempre(
+  'Sucesso',
+  'Agendamento efetuado com sucesso!'
+);
     } catch (e: any) {
       console.log(e);
       mostrarAlertaSempre(
