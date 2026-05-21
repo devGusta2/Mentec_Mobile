@@ -19,7 +19,11 @@ export function AuthProvider({ children }) {
     const role = await AsyncStorage.getItem('@mentec_role');
     const userid = await AsyncStorage.getItem('@mentec_userid');
     if (token && role) {
-      setUser({ token, role });
+      setUser({
+        token,
+        role,
+        userid
+      });
     }
 
     setLoading(false);
@@ -41,7 +45,8 @@ export function AuthProvider({ children }) {
       console.log(response.data)
       setUser({
         token: response.data.accessToken,
-        role: response.data.role
+        role: response.data.role,
+        userid: response.data.idUser
       });
 
     } catch (e) {
