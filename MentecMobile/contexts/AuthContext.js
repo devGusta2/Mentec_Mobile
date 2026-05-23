@@ -56,9 +56,12 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    navigation.navigate('Inicio'); 
-    await AsyncStorage.clear();
-    setUser(null);
+    try {
+      await AsyncStorage.clear();
+      setUser(null);
+    } catch (e) {
+      console.log('Logout error', e);
+    }
   }
 
 
