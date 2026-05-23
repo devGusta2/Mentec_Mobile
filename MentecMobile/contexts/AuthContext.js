@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 export const AuthContext = createContext({});
 
 
@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   
   async function loadUser() {

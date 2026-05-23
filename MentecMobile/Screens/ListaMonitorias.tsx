@@ -12,6 +12,7 @@ import {
   mostrarAlerta,
   mostrarAlertaSempre,
 } from '../Utils/notificacoes';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 
 type Monitor = {
@@ -30,7 +31,7 @@ type Monitoria = {
 };
 
 export default function ListaMonitorias() {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [data, setData] = useState<Monitoria[]>([]); 
 
