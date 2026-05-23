@@ -68,6 +68,30 @@ export default function Cronograma({ navigation }) {
     (a) => a.data === selectedDate
   );
 
+
+  //   [
+  //     {
+  //         "aulaId": 9,
+  //         "tituloMonitoria": "Estatistica aplicada",
+  //         "tituloAula": "123",
+  //         "descricaoAula": "123",
+  //         "data": "2026-12-12",
+  //         "inicio": "12:00",
+  //         "fim": "17:00",
+  //         "link": "2312312"
+  //     },
+  //     {
+  //         "aulaId": 10,
+  //         "tituloMonitoria": "Estatistica aplicada",
+  //         "tituloAula": "1234",
+  //         "descricaoAula": "13414123",
+  //         "data": "2026-12-19",
+  //         "inicio": "14:00",
+  //         "fim": "17:00",
+  //         "link": "2312312"
+  //     }
+  // ]
+
   return (
     <View style={styles.container}>
 
@@ -92,23 +116,48 @@ export default function Cronograma({ navigation }) {
           eventosDoDia.map((item, index) => (
             <View key={index} style={styles.card}>
 
-              <View>
-                <Text style={styles.titulo}>
-                  {item.titulo}
-                </Text>
-                <Text style={styles.horario}>
-                  {item.horario}
-                </Text>
-              </View>
+              <View style={styles.cardContent}>
 
-              <Pressable
-                style={styles.botao}
-                onPress={() =>
-                  Linking.openURL(item.link || "https://teams.microsoft.com/")
-                }
-              >
-                <Text style={styles.textBotao}>Entrar</Text>
-              </Pressable>
+                <View style={styles.topInfo}>
+                  <Text style={styles.monitoriaTitulo}>
+                    {item.tituloMonitoria}
+                  </Text>
+
+                  <Text style={styles.aulaTitulo}>
+                    {item.tituloAula}
+                  </Text>
+                </View>
+
+                <Text style={styles.descricao}>
+                  {item.descricaoAula}
+                </Text>
+
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Data:</Text>
+                  <Text style={styles.value}>{item.data}</Text>
+                </View>
+
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Horário:</Text>
+                  <Text style={styles.value}>
+                    {item.inicio} às {item.fim}
+                  </Text>
+                </View>
+
+                <Pressable
+                  style={styles.botao}
+                  onPress={() =>
+                    Linking.openURL(
+                      item.link || "https://teams.microsoft.com/"
+                    )
+                  }
+                >
+                  <Text style={styles.textBotao}>
+                    Entrar na Aula
+                  </Text>
+                </Pressable>
+
+              </View>
 
             </View>
           ))
@@ -189,5 +238,57 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     color: '#777',
+  },
+  cardContent: {
+    width: '100%',
+  },
+
+  topInfo: {
+    marginBottom: 10,
+  },
+
+  monitoriaTitulo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#770B1C',
+  },
+
+  aulaTitulo: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 2,
+  },
+
+  descricao: {
+    color: '#555',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+
+  infoRow: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+
+  label: {
+    fontWeight: 'bold',
+    marginRight: 5,
+  },
+
+  value: {
+    color: '#444',
+  },
+
+  botao: {
+    backgroundColor: '#770B1C',
+    marginTop: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  textBotao: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

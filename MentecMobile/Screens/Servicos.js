@@ -9,9 +9,16 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-
+import { AuthContext } from '../contexts/AuthContext';
+import { useContext } from 'react';
 export default function Servicos() {
   const navigation = useNavigation();
+   const { logout } = useContext(AuthContext);
+  
+    const handleLogout = async () => {
+      await logout();
+      
+    };
 
   return (
     <View style={styles.containerTela}>
@@ -40,7 +47,7 @@ export default function Servicos() {
 
         <BotaoMenu
           titulo="Menu Inicial"
-          onPress={() => navigation.navigate('Inicio')}
+          onPress={handleLogout}
           imagem={<Ionicons name="home" size={60} color="#fff" />}
         />
 

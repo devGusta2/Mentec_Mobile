@@ -1,5 +1,4 @@
 import { View, StyleSheet, Pressable } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -10,19 +9,20 @@ import React, { useContext } from 'react';
 export default function NavBar() {
   const navigation = useNavigation();
   const { logout } = useContext(AuthContext);
-  const insets = useSafeAreaInsets();
 
   const handleLogout = async () => {
     await logout();
-    
+
   };
   return (
-    <View style={[
-      styles.containerNavBar,
-      { paddingBottom: insets.bottom, height: 50 + insets.bottom }
-    ]}>
+    <View style={styles.containerNavBar}>
 
-      <Pressable onPress={() => navigation.navigate('Inicio')}>
+      <Pressable
+        onPress={async () => {
+          await handleLogout();
+          navigation.navigate("Inicio");
+        }}
+      >
         <MaterialCommunityIcons name="home-outline" size={30} color="white" />
       </Pressable>
 
@@ -35,9 +35,9 @@ export default function NavBar() {
       </Pressable>
 
       {/* BOTÃO LOGOUT */}
-      <Pressable onPress={handleLogout}>
+      {/* <Pressable onPress={handleLogout}>
         <MaterialCommunityIcons name="logout" size={26} color="white" />
-      </Pressable>
+      </Pressable> */}
 
     </View>
   );

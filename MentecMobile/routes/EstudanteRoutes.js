@@ -10,6 +10,9 @@ import Forum from "../Screens/Forum";
 import SAC from "../Screens/Sac";
 import Conf from '../Screens/Conf'
 import Feedback from "../Screens/Feedback";
+import Inicio from "../Screens/Inicio";
+import LoginScreen from "../Screens/Login";
+import Cadastro from "../Screens/Cadastro";
 const Stack = createNativeStackNavigator();
 
 export function EstudanteRoutes() {
@@ -24,7 +27,6 @@ export function EstudanteRoutes() {
       <Stack.Screen name="Forum" component={Forum} />
       <Stack.Screen name="SAC" component={SAC} />
       <Stack.Screen name="Feedback" component={Feedback} />
-
     </Stack.Navigator>
   );
 }

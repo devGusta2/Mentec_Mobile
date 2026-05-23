@@ -15,10 +15,11 @@ import {
   mostrarAlerta,
   mostrarAlertaSempre,
 } from '../Utils/notificacoes';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 export default function Forum({ navigation }) {
 
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [topicos, setTopicos] = useState([]);
 
