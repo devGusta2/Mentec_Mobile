@@ -12,10 +12,11 @@ import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registrarLembretesMonitoria } from '../Utils/notificacoes';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 export default function Cronograma({ navigation }) {
 
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [agendamentos, setAgendamentos] = useState([]);
