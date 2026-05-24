@@ -1,133 +1,192 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
+  Pressable,
+  Linking,
 } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 import NavBar from '../components/Navbar';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { registrarLembretesMonitoria } from '../Utils/notificacoes';
 
 export default function Cronograma({ navigation }) {
-  const totalQuadrados = 21;
+
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [agendamentos, setAgendamentos] = useState([]);
+
+
+  const fetchCronograma = async () => {
+    try {
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+      const response = await axios.get(
+        `${API_URL}/agendamentos/buscar/${idUser}`,
+        {
+          headers: { Authorization: `Bearer ${TOKEN}` }
+        }
+      );
+
+      setAgendamentos(response.data);
+      await registrarLembretesMonitoria(response.data);
+
+    } catch (e) {
+      console.log("Erro cronograma", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchCronograma();
+  }, []);
+
+  const markedDates = {};
+
+  agendamentos.forEach((item) => {
+    markedDates[item.data] = {
+      marked: true,
+      dotColor: '#770B1C',
+    };
+  });
+
+  if (selectedDate) {
+    markedDates[selectedDate] = {
+      ...markedDates[selectedDate],
+      selected: true,
+      selectedColor: '#770B1C',
+    };
+  }
+
+
+  const eventosDoDia = agendamentos.filter(
+    (a) => a.data === selectedDate
+  );
 
   return (
-    <View style={styles.containerCronograma}>
-      {/* Header */}
+    <View style={styles.container}>
+
       <View style={styles.header}>
-        <Text style={styles.textHeader}>Cronograma de Aulas</Text>
+        <Text style={styles.tituloHeader}>Cronograma</Text>
       </View>
 
-      {/* Conteúdo */}
-      <ScrollView
-        style={styles.mainContainer}
-        contentContainerStyle={{ paddingBottom: 100 }} // espaço para navbar
-      >
-        {/* Filtro */}
-        <View style={styles.filter}>
-          <Text style={{ color: 'white' }}>2025</Text>
-          <Text style={{ color: 'white' }}>Setembro</Text>
-        </View>
+      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
-        {/* Grid de dias */}
-        <View style={styles.gridContainer}>
-          {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'].map((dia, idx) => (
-            <View key={idx} style={styles.quadradin}>
-              <Text>{dia}</Text>
+        <Calendar
+          onDayPress={(day) => setSelectedDate(day.dateString)}
+          markedDates={markedDates}
+        />
+
+        {selectedDate && (
+          <Text style={styles.subtitulo}>
+            Monitorias do dia {selectedDate}
+          </Text>
+        )}
+
+        {eventosDoDia.length > 0 ? (
+          eventosDoDia.map((item, index) => (
+            <View key={index} style={styles.card}>
+
+              <View>
+                <Text style={styles.titulo}>
+                  {item.titulo}
+                </Text>
+                <Text style={styles.horario}>
+                  {item.horario}
+                </Text>
+              </View>
+
+              <Pressable
+                style={styles.botao}
+                onPress={() =>
+                  Linking.openURL(item.link || "https://teams.microsoft.com/")
+                }
+              >
+                <Text style={styles.textBotao}>Entrar</Text>
+              </Pressable>
+
             </View>
-          ))}
-
-          {Array.from({ length: totalQuadrados }, (_, i) => (
-            <View key={i} style={styles.quadradin}>
-              <Text style={styles.numeroQuadrado}>{i + 1}</Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Horários */}
-        <View style={styles.rowLines}>
-          <View style={styles.line}>
-            <Text style={styles.lineText}>08:00 Matemática discreta</Text>
-          </View>
-          <View style={styles.line}>
-            <Text style={styles.lineText}>18:00 Inglês</Text>
-          </View>
-          <View style={styles.line}></View>
-          <View style={styles.line}></View>
-        </View>
+          ))
+        ) : (
+          selectedDate && (
+            <Text style={styles.vazio}>
+              Nenhuma monitoria nesse dia
+            </Text>
+          )
+        )}
       </ScrollView>
 
-      {/* Navbar fixa */}
       <NavBar navigation={navigation} />
     </View>
   );
-}
 
+}
 const styles = StyleSheet.create({
-  containerCronograma: {
+  container: {
     flex: 1,
-    backgroundColor: '#770B1C',
-    position: 'relative',
+    backgroundColor: '#ecf0f1',
   },
+
   header: {
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textHeader: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: 'white',
-  },
-  mainContainer: {
-    flex: 1,
-    backgroundColor: '#E5E5E5',
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    padding: 20,
-  },
-  filter: {
     backgroundColor: '#770B1C',
-    height: 35,
-    width: '100%',
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 30,
-    paddingVertical: 5,
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  quadradin: {
-    height: 37,
-    width: 37,
-    backgroundColor: '#ABAAAA',
-    marginBottom: 15,
-    borderRadius: 10,
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  numeroQuadrado: {
-    fontSize: 10,
+
+  tituloHeader: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
-  rowLines: {
-    marginTop: 20,
-    flexDirection: 'column',
-    gap: 5,
+
+  subtitulo: {
+    marginTop: 15,
+    marginLeft: 10,
+    fontWeight: 'bold',
   },
-  line: {
-    width: '100%',
-    height: 30,
-    backgroundColor: '#ABAAAA',
-    borderRadius: 5,
-    justifyContent: 'center',
-    marginBottom: 5,
+
+  card: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 12,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    elevation: 3,
   },
-  lineText: {
-    color: 'whitesmoke',
-    paddingLeft: 5,
+
+  titulo: {
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+
+  horario: {
+    fontSize: 12,
+    color: '#666',
+  },
+
+  botao: {
+    backgroundColor: '#770B1C',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+
+  textBotao: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+
+  vazio: {
+    marginTop: 10,
+    textAlign: 'center',
+    color: '#777',
   },
 });

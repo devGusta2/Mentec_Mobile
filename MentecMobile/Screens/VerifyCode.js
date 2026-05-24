@@ -1,17 +1,18 @@
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 
-const API_URL = "http://localhost:8080"
+
 
 
 export default function VerifyCode({ route, navigation }) {
-
+    
+    const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
     const { data } = route.params || {};
     const [code, setCode] = useState("");
@@ -58,7 +59,7 @@ const verifyCode = async (receivedCode) => {
 
         if (response.status === 200) {
             alert("✅ Código verificado com sucesso!");
-            // navigation.navigate("ProximaTela"); // se quiser
+            navigation.navigate("Inicio");
         }
 
     } catch (e) {

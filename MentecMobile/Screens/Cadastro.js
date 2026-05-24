@@ -28,12 +28,12 @@ export default function Cadastro({ navigation }) {
       novosErros.senha = 'A senha deve ter pelo menos 8 caracteres.';
     }
 
-    // Verificação se as senhas coincidem
+  
     if (senha && repeteSenha && senha !== repeteSenha) {
       novosErros.repeteSenha = 'As senhas não coincidem.';
     }
 
-    // Validação de email (simples: contém @ e .)
+  
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       novosErros.email = 'Digite um e-mail válido.';
     }

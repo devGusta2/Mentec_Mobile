@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, Pressable } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
@@ -12,18 +12,18 @@ export default function Pesquisar() {
 
       <View style={styles.filtro}>
         <View style={styles.campoFiltro}>
-          <AntDesign name="down" size={15} color="white" />{' '}
-          <Text style={{ color: 'white' }}>Area</Text>{' '}
+          <AntDesign name="down" size={15} color="white" />
+          <Text style={styles.textFiltro}>Área</Text>
         </View>
+
         <View style={styles.campoFiltro}>
-          {' '}
-          <AntDesign name="down" size={15} color="white" />{' '}
-          <Text style={{ color: 'white' }}>Período</Text>{' '}
+          <AntDesign name="down" size={15} color="white" />
+          <Text style={styles.textFiltro}>Período</Text>
         </View>
+
         <View style={styles.campoFiltro}>
-          {' '}
-          <AntDesign name="down" size={15} color="white" />{' '}
-          <Text style={{ color: 'white' }}>Data</Text>{' '}
+          <AntDesign name="down" size={15} color="white" />
+          <Text style={styles.textFiltro}>Data</Text>
         </View>
       </View>
     </View>
@@ -32,7 +32,7 @@ export default function Pesquisar() {
 
 const styles = StyleSheet.create({
   containerPesq: {
-    flexDirection: 'center',
+    flexDirection: 'column', 
     backgroundColor: '#770B1C',
     width: '100%',
     alignItems: 'center',
@@ -53,22 +53,27 @@ const styles = StyleSheet.create({
     gap: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    color: 'white',
   },
 
   pesq: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    width: "90%",
+    width: '90%',
     height: 30,
     borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   text: {
     color: '#ABAAAA',
     fontSize: 10,
     width: '90%',
-    paddingLeft: 10
+    paddingLeft: 10,
+  },
+
+  textFiltro: {
+    color: '#fff',
+    fontSize: 12,
   },
 });

@@ -8,18 +8,18 @@ export default function AvatarModal({ visible, onClose, avatar, defaultAvatar, o
       <View style={styles.overlay}>
         <View style={styles.modalBox}>
 
-          {/* Fechar modal */}
+
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
             <Ionicons name="close" size={30} color="#800010" />
           </TouchableOpacity>
 
-          {/* Foto ampliada */}
+
           <Image
             source={avatar ? { uri: avatar } : defaultAvatar}
             style={styles.bigAvatar}
           />
 
-          {/* Botão trocar foto */}
+  
           <TouchableOpacity style={styles.button} onPress={onChangePhoto}>
             <Text style={styles.buttonText}>Alterar foto</Text>
           </TouchableOpacity>
