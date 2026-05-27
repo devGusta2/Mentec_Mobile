@@ -146,11 +146,35 @@ export default function Cronograma({ navigation }) {
 
                 <Pressable
                   style={styles.botao}
-                  onPress={() =>
-                    Linking.openURL(
-                      item.link || "https://teams.microsoft.com/"
-                    )
-                  }
+                  onPress={async () => {
+
+                    try {
+
+                      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+                      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+                      await axios.post(
+                        `${API_URL}/frequencia/registrar`,
+                        {
+                          idAula: item.aulaId,
+                          idAluno: idUser
+                        },
+                        {
+                          headers: {
+                            Authorization: `Bearer ${TOKEN}`
+                          }
+                        }
+                      );
+
+                      await Linking.openURL(
+                        item.link || "https://teams.microsoft.com/"
+                      );
+
+                    } catch (error) {
+
+                      console.log("Erro ao registrar presença", error);
+                    }
+                  }}
                 >
                   <Text style={styles.textBotao}>
                     Entrar na Aula
