@@ -25,8 +25,8 @@ type Monitoria = {
   id: number;
   titulo: string;
   descricao: string;
-  horario: string;
-  data: string;
+  horario?: string;
+  data?: string;
   monitor: Monitor;
 };
 
@@ -116,6 +116,27 @@ export default function ListaMonitorias() {
     return conteudoPesquisavel.includes(termo);
   });
 
+  const formatarData = (dataMonitoria?: string) => {
+    if (!dataMonitoria) {
+      return 'A definir';
+    }
+
+    const [ano, mes, dia] = dataMonitoria.split('-');
+    if (!ano || !mes || !dia) {
+      return dataMonitoria;
+    }
+
+    return `${dia}/${mes}/${ano}`;
+  };
+
+  const formatarHorario = (horario?: string) => {
+    if (!horario) {
+      return 'A definir';
+    }
+
+    return horario.slice(0, 5);
+  };
+
   return (
     <View style={styles.tela}>
       <StatusBar style="light" />
@@ -172,11 +193,11 @@ export default function ListaMonitorias() {
               </Text>
 
               <Text style={styles.descricao}>
-                Horário: {item.horario}
+                Horário: {formatarHorario(item.horario)}
               </Text>
 
               <Text style={styles.data}>
-                Data: {item.data}
+                Data: {formatarData(item.data)}
               </Text>
 
               <Pressable

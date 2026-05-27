@@ -46,6 +46,31 @@ export default function Cronograma({ navigation }) {
     fetchCronograma();
   }, []);
 
+  const registrarAcessoAula = async (aulaId) => {
+    try {
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+      await axios.post(
+        `${API_URL}/frequencia/registrar`,
+        {
+          idAula: aulaId,
+          idAluno: idUser,
+        },
+        {
+          headers: { Authorization: `Bearer ${TOKEN}` },
+        }
+      );
+    } catch (e) {
+      console.log('Erro ao registrar acesso da aula', e);
+    }
+  };
+
+  const acessarAula = async (item) => {
+    await registrarAcessoAula(item.aulaId);
+    Linking.openURL(item.link || "https://teams.microsoft.com/");
+  };
+
   const markedDates = {};
 
   agendamentos.forEach((item) => {
@@ -146,11 +171,7 @@ export default function Cronograma({ navigation }) {
 
                 <Pressable
                   style={styles.botao}
-                  onPress={() =>
-                    Linking.openURL(
-                      item.link || "https://teams.microsoft.com/"
-                    )
-                  }
+                  onPress={() => acessarAula(item)}
                 >
                   <Text style={styles.textBotao}>
                     Entrar na Aula

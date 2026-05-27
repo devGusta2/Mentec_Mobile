@@ -5,19 +5,23 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Alert,
+  Platform,
 } from 'react-native';
 
 import Header from '../components/header';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 export default function HistoricoMonitorias({ navigation }) {
 
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [historico, setHistorico] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cancelandoId, setCancelandoId] = useState(null);
 
 
   const fetchHistorico = async () => {
@@ -68,6 +72,56 @@ export default function HistoricoMonitorias({ navigation }) {
   useEffect(() => {
     fetchHistorico();
   }, []);
+
+  const cancelarAgendamento = async (agendamentoId) => {
+    if (!agendamentoId) {
+      Alert.alert('Erro', 'Agendamento inválido para cancelamento.');
+      return;
+    }
+
+    try {
+      setCancelandoId(agendamentoId);
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+
+      await axios.delete(`${API_URL}/agendamentos/cancelar/${agendamentoId}`, {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+      });
+
+      await fetchHistorico();
+      Alert.alert('Agendamento cancelado', 'A monitoria foi removida do seu histórico.');
+    } catch (e) {
+      console.log('Erro ao cancelar agendamento:', e?.response?.data || e?.message || e);
+      Alert.alert(
+        'Erro',
+        e?.response?.data?.message || 'Não foi possível cancelar o agendamento.'
+      );
+    } finally {
+      setCancelandoId(null);
+    }
+  };
+
+  const confirmarCancelamento = (agendamentoId) => {
+    if (Platform.OS === 'web') {
+      const confirmou = window.confirm('Tem certeza que deseja cancelar esta monitoria?');
+      if (confirmou) {
+        cancelarAgendamento(agendamentoId);
+      }
+      return;
+    }
+
+    Alert.alert(
+      'Cancelar agendamento',
+      'Tem certeza que deseja cancelar esta monitoria?',
+      [
+        { text: 'Não', style: 'cancel' },
+        {
+          text: 'Sim, cancelar',
+          style: 'destructive',
+          onPress: () => cancelarAgendamento(agendamentoId),
+        },
+      ]
+    );
+  };
 
 
   const formatarData = (data) => {
@@ -174,6 +228,18 @@ export default function HistoricoMonitorias({ navigation }) {
                       </Text>
                     </TouchableOpacity>
 
+                    {status === "AGENDADA" && (
+                      <TouchableOpacity
+                        style={[styles.botao, styles.botaoCancelar]}
+                        onPress={() => confirmarCancelamento(item.id)}
+                        disabled={cancelandoId === item.id}
+                      >
+                        <Text style={styles.textBotao}>
+                          {cancelandoId === item.id ? 'Cancelando...' : 'Cancelar'}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
                   </View>
 
                 </View>
@@ -245,7 +311,8 @@ const styles = StyleSheet.create({
 
   botoes: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 8,
     marginTop: 10,
   },
 
@@ -262,6 +329,10 @@ const styles = StyleSheet.create({
 
   botaoDesabilitado: {
     backgroundColor: '#4CAF50',
+  },
+
+  botaoCancelar: {
+    backgroundColor: '#b30000',
   },
 
   textBotao: {
