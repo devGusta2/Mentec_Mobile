@@ -32,7 +32,31 @@ export default function HistoricoMonitorias({ navigation }) {
         }
       );
 
-      setHistorico(response.data);
+      const historicoComFeedback = await Promise.all(
+        response.data.map(async (item) => {
+          try {
+            const feedbackResponse = await axios.get(
+              `${API_URL}/feedback/monitoria/${item.id}/aluno/${idUser}/existe`,
+              {
+                headers: { Authorization: `Bearer ${TOKEN}` }
+              }
+            );
+
+            return {
+              ...item,
+              feedbackEnviado: feedbackResponse.data === true,
+            };
+          } catch (error) {
+            console.log("Erro ao verificar feedback:", error);
+            return {
+              ...item,
+              feedbackEnviado: false,
+            };
+          }
+        })
+      );
+
+      setHistorico(historicoComFeedback);
 
     } catch (e) {
       console.log("Erro histórico:", e);
@@ -135,13 +159,18 @@ export default function HistoricoMonitorias({ navigation }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                      style={[styles.botao, styles.botaoSecundario]}
+                      style={[
+                        styles.botao,
+                        styles.botaoSecundario,
+                        item.feedbackEnviado && styles.botaoDesabilitado,
+                      ]}
                       onPress={() =>
                         navigation.navigate("Feedback", { id: item.id })
                       }
+                      disabled={item.feedbackEnviado}
                     >
                       <Text style={styles.textBotao}>
-                        Feedback
+                        {item.feedbackEnviado ? "Feedback enviado" : "Feedback"}
                       </Text>
                     </TouchableOpacity>
 
@@ -229,6 +258,10 @@ const styles = StyleSheet.create({
 
   botaoSecundario: {
     backgroundColor: '#999',
+  },
+
+  botaoDesabilitado: {
+    backgroundColor: '#4CAF50',
   },
 
   textBotao: {

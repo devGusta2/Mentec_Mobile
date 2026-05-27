@@ -1,11 +1,11 @@
-import { View, Text, ScrollView, StyleSheet, Image, Pressable } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import Pesquisar from '../components/Pesquisa';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 import {
   CATEGORIAS,
   adicionarAoHistorico,
@@ -34,6 +34,7 @@ export default function ListaMonitorias() {
   const API_URL = getApiUrl();
 
   const [data, setData] = useState<Monitoria[]>([]); 
+  const [pesquisa, setPesquisa] = useState('');
 
   const insets = useSafeAreaInsets();
   const paddingBottomLista = insets.bottom + 120;
@@ -94,6 +95,27 @@ export default function ListaMonitorias() {
     fetchMonitorias();
   }, []);
 
+  const monitoriasFiltradas = data.filter((monitoria) => {
+    const termo = pesquisa.trim().toLowerCase();
+
+    if (!termo) {
+      return true;
+    }
+
+    const conteudoPesquisavel = [
+      monitoria.titulo,
+      monitoria.descricao,
+      monitoria.monitor?.nome,
+      monitoria.monitor?.sobrenome,
+      monitoria.monitor?.especialidades,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    return conteudoPesquisavel.includes(termo);
+  });
+
   return (
     <View style={styles.tela}>
       <StatusBar style="light" />
@@ -105,7 +127,16 @@ export default function ListaMonitorias() {
 
  
       <View style={styles.buscaEnv}>
-        <Pesquisar />
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={22} color="#000" />
+
+          <TextInput
+            placeholder="Pesquisar monitoria..."
+            style={styles.searchInput}
+            value={pesquisa}
+            onChangeText={setPesquisa}
+          />
+        </View>
       </View>
 
 
@@ -120,7 +151,11 @@ export default function ListaMonitorias() {
           Monitorias que podem lhe interessar:
         </Text>
 
-        {data.map((item) => (
+        {monitoriasFiltradas.length === 0 ? (
+          <Text style={styles.semResultados}>
+            Nenhuma monitoria encontrada
+          </Text>
+        ) : monitoriasFiltradas.map((item) => (
           <View key={item.id} style={styles.card}>
             <View style={styles.containerInfo}>
               <Text style={styles.titulo}>{item.titulo}</Text>
@@ -175,8 +210,10 @@ const styles = StyleSheet.create({
   faixaTopo: {
     backgroundColor: '#770B1C',
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 14,
+    minHeight: 64,
     alignItems: 'flex-end',
+    justifyContent: 'center',
   },
 
   logoMentec: {
@@ -190,8 +227,25 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
 
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#6b0f1a',
+    borderWidth: 2,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    height: 45,
+  },
+
+  searchInput: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 14,
+  },
+
   scrollContent: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     paddingTop: 8,
   },
 
@@ -201,54 +255,62 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  semResultados: {
+    color: '#555',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 20,
+  },
+
   card: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    borderRadius: 15,
-    marginBottom: 12,
+    borderRadius: 12,
+    marginBottom: 10,
     overflow: 'hidden',
     elevation: 3,
   },
 
   containerInfo: {
     flex: 1,
-    padding: 12,
+    padding: 10,
     justifyContent: 'space-between',
   },
 
   titulo: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
+    color: '#101010',
   },
 
   descricao: {
     fontSize: 13,
-    color: '#555',
-    marginVertical: 6,
+    color: '#1f1f1f',
+    marginVertical: 4,
   },
 
   data: {
     fontSize: 12,
-    color: '#777',
+    color: '#202020',
   },
 
   botao: {
-    marginTop: 10,
+    marginTop: 8,
     backgroundColor: '#770B1C',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 8,
     alignSelf: 'flex-start',
   },
 
   textoBotao: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
   },
 
   imagem: {
-    width: 120,
+    width: 100,
     height: '100%',
   },
 });
