@@ -5,6 +5,8 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Linking,
+  Alert,
 } from 'react-native';
 
 import Header from '../components/header';
@@ -71,14 +73,14 @@ export default function HistoricoMonitorias({ navigation }) {
 
 
   const formatarData = (data) => {
-  if (!data) return "Data não disponível";
+    if (!data) return "Data não disponível";
 
 
-  const partes = data.split('-');
-  const d = new Date(partes[0], partes[1] - 1, partes[2]);
+    const partes = data.split('-');
+    const d = new Date(partes[0], partes[1] - 1, partes[2]);
 
-  return d.toLocaleDateString('pt-BR');
-};
+    return d.toLocaleDateString('pt-BR');
+  };
 
 
   const getStatus = (dataInicio) => {
@@ -96,6 +98,55 @@ export default function HistoricoMonitorias({ navigation }) {
       return "CONCLUIDA";
     } else {
       return "AGENDADA";
+    }
+  };
+
+  const abrirMaterial = async (linkMaterial) => {
+
+    if (!linkMaterial) {
+      Alert.alert(
+        'Material indisponível',
+        'Essa monitoria ainda não possui link de material.'
+      );
+      return;
+    }
+
+    try {
+
+      let url = linkMaterial.trim();
+
+      // adiciona https:// automaticamente
+      if (
+        !url.startsWith('http://') &&
+        !url.startsWith('https://')
+      ) {
+        url = `https://${url}`;
+      }
+
+      const suportado =
+        await Linking.canOpenURL(url);
+
+      if (!suportado) {
+        Alert.alert(
+          'Link inválido',
+          'Não foi possível abrir o link do material.'
+        );
+        return;
+      }
+
+      await Linking.openURL(url);
+
+    } catch (error) {
+
+      console.log(
+        'Erro ao abrir material:',
+        error
+      );
+
+      Alert.alert(
+        'Erro',
+        'Não foi possível abrir o material.'
+      );
     }
   };
 
@@ -151,7 +202,7 @@ export default function HistoricoMonitorias({ navigation }) {
 
                     <TouchableOpacity
                       style={styles.botao}
-                      onPress={() => alert("Abrir material")}
+                      onPress={() => abrirMaterial(item.linkMaterial)}
                     >
                       <Text style={styles.textBotao}>
                         Material

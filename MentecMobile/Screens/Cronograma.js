@@ -69,29 +69,6 @@ export default function Cronograma({ navigation }) {
   );
 
 
-  //   [
-  //     {
-  //         "aulaId": 9,
-  //         "tituloMonitoria": "Estatistica aplicada",
-  //         "tituloAula": "123",
-  //         "descricaoAula": "123",
-  //         "data": "2026-12-12",
-  //         "inicio": "12:00",
-  //         "fim": "17:00",
-  //         "link": "2312312"
-  //     },
-  //     {
-  //         "aulaId": 10,
-  //         "tituloMonitoria": "Estatistica aplicada",
-  //         "tituloAula": "1234",
-  //         "descricaoAula": "13414123",
-  //         "data": "2026-12-19",
-  //         "inicio": "14:00",
-  //         "fim": "17:00",
-  //         "link": "2312312"
-  //     }
-  // ]
-
   return (
     <View style={styles.container}>
 
