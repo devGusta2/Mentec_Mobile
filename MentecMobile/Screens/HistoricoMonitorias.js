@@ -9,7 +9,6 @@ import {
   Platform,
 } from 'react-native';
 
-import Header from '../components/header';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,6 +21,7 @@ export default function HistoricoMonitorias({ navigation }) {
   const [historico, setHistorico] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cancelandoId, setCancelandoId] = useState(null);
+  const [abaAtiva, setAbaAtiva] = useState("AGENDADA");
 
 
   const fetchHistorico = async () => {
@@ -135,30 +135,85 @@ export default function HistoricoMonitorias({ navigation }) {
 };
 
 
-  const getStatus = (dataInicio) => {
+  const parseDataLocal = (data) => {
+    if (!data) return null;
+
+    const [ano, mes, dia] = data.split('-').map(Number);
+    if (!ano || !mes || !dia) return null;
+
+    return new Date(ano, mes - 1, dia);
+  };
+
+  const getStatus = (dataInicio, dataFim) => {
     if (!dataInicio) return "AGENDADA";
 
     const hoje = new Date();
-    const data = new Date(dataInicio);
+    const inicio = parseDataLocal(dataInicio);
+    const fim = parseDataLocal(dataFim || dataInicio);
+
+    if (!inicio || !fim) return "AGENDADA";
 
     hoje.setHours(0, 0, 0, 0);
-    data.setHours(0, 0, 0, 0);
+    inicio.setHours(0, 0, 0, 0);
+    fim.setHours(0, 0, 0, 0);
 
-    if (data.getTime() === hoje.getTime()) {
-      return "EM_ANDAMENTO";
-    } else if (data < hoje) {
-      return "CONCLUIDA";
-    } else {
+    if (hoje < inicio) {
       return "AGENDADA";
     }
+
+    if (hoje > fim) {
+      return "CONCLUIDA";
+    }
+
+    return "EM_ANDAMENTO";
   };
+
+  const abas = [
+    { status: "AGENDADA", label: "Agendadas" },
+    { status: "EM_ANDAMENTO", label: "Em andamento" },
+    { status: "CONCLUIDA", label: "Concluidas" },
+  ];
+
+  const contarPorStatus = (statusBuscado) => (
+    historico.filter((item) => getStatus(item.dataInicio, item.dataFim) === statusBuscado).length
+  );
+
+  const historicoFiltrado = historico.filter(
+    (item) => getStatus(item.dataInicio, item.dataFim) === abaAtiva
+  );
+
+  const abaSelecionada = abas.find((aba) => aba.status === abaAtiva);
 
   return (
     <View style={styles.containerTela}>
 
-      <Header titulo="Histórico de Monitorias" />
+      <View style={styles.header}>
+        <Text style={styles.logoMentec}>Mentec</Text>
+        <Text style={styles.headerTitulo}>Histórico de Monitorias</Text>
+      </View>
 
       <View style={styles.container}>
+
+        <View style={styles.tabs}>
+          {abas.map((aba) => {
+            const selecionada = abaAtiva === aba.status;
+
+            return (
+              <TouchableOpacity
+                key={aba.status}
+                style={[styles.tab, selecionada && styles.tabAtiva]}
+                onPress={() => setAbaAtiva(aba.status)}
+              >
+                <Text style={[styles.tabTexto, selecionada && styles.tabTextoAtivo]}>
+                  {aba.label}
+                </Text>
+                <Text style={[styles.tabContador, selecionada && styles.tabTextoAtivo]}>
+                  {contarPorStatus(aba.status)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
 
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
@@ -170,10 +225,15 @@ export default function HistoricoMonitorias({ navigation }) {
               Nenhuma monitoria encontrada
             </Text>
 
-          ) : (
-            historico.map((item, index) => {
+          ) : historicoFiltrado.length === 0 ? (
+            <Text style={styles.info}>
+              Nenhuma monitoria em {abaSelecionada?.label.toLowerCase()}
+            </Text>
 
-              const status = getStatus(item.dataInicio);
+          ) : (
+            historicoFiltrado.map((item, index) => {
+
+              const status = getStatus(item.dataInicio, item.dataFim);
 
               return (
                 <View key={index} style={styles.card}>
@@ -183,7 +243,7 @@ export default function HistoricoMonitorias({ navigation }) {
                   </Text>
 
                   <Text style={styles.descricao}>
-                    Monitoria em {formatarData(item.dataInicio)}
+                    Monitoria de {formatarData(item.dataInicio)} ate {formatarData(item.dataFim)}
                   </Text>
 
                   <Text style={styles.monitor}>
@@ -264,13 +324,43 @@ const styles = StyleSheet.create({
     backgroundColor: '#770B1C',
   },
 
+  header: {
+    backgroundColor: '#770B1C',
+    width: '100%',
+    minHeight: 190,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomLeftRadius: 45,
+    borderBottomRightRadius: 45,
+    paddingTop: 22,
+    paddingBottom: 42,
+  },
+
+  logoMentec: {
+    color: 'white',
+    alignSelf: 'flex-end',
+    paddingRight: 20,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+
+  headerTitulo: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: '400',
+    textAlign: 'center',
+    marginTop: 34,
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#E5E5E5',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    marginTop: 10,
-    padding: 10,
+    marginTop: -18,
+    paddingHorizontal: 20,
+    paddingTop: 34,
+    paddingBottom: 16,
   },
 
   info: {
@@ -279,29 +369,71 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 
+  tabs: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+
+  tab: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+
+  tabAtiva: {
+    backgroundColor: '#770B1C',
+    borderColor: '#770B1C',
+  },
+
+  tabTexto: {
+    color: '#555',
+    fontSize: 11,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
+  tabContador: {
+    color: '#555',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginTop: 3,
+  },
+
+  tabTextoAtivo: {
+    color: '#fff',
+  },
+
   card: {
     backgroundColor: '#fff',
     marginTop: 10,
-    padding: 12,
+    padding: 14,
     borderRadius: 12,
     elevation: 3,
   },
 
   titulo: {
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 15,
+    color: '#101010',
   },
 
   descricao: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 5,
+    fontSize: 13,
+    color: '#1f1f1f',
+    marginTop: 7,
+    lineHeight: 18,
   },
 
   monitor: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 5,
+    fontSize: 13,
+    color: '#1f1f1f',
+    marginTop: 6,
   },
 
   status: {

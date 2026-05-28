@@ -64,6 +64,7 @@ export default function Perfil({ navigation }) {
     <View style={styles.containerTela}>
       <Header titulo="Perfil" />
 
+      <View style={styles.conteudo}>
       <View style={styles.profileCard}>
         <View style={styles.containerAvatar}>
           <View style={styles.avatarCircle}>
@@ -92,6 +93,7 @@ export default function Perfil({ navigation }) {
           />
         </View>
       </View>
+      </View>
 
       <NavBar navigation={navigation} />
     </View>
@@ -101,13 +103,23 @@ export default function Perfil({ navigation }) {
 const styles = StyleSheet.create({
   containerTela: {
     flex: 1,
+    backgroundColor: '#770B1C',
+  },
+
+  conteudo: {
+    flex: 1,
     backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: -18,
+    paddingHorizontal: 20,
+    paddingTop: 34,
+    paddingBottom: 16,
   },
 
   profileCard: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 10,
   },
 
   containerAvatar: {

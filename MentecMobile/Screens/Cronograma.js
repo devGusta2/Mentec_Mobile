@@ -124,6 +124,7 @@ export default function Cronograma({ navigation }) {
         <Text style={styles.tituloHeader}>Cronograma</Text>
       </View>
 
+      <View style={styles.conteudo}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
         <Calendar
@@ -190,6 +191,7 @@ export default function Cronograma({ navigation }) {
           )
         )}
       </ScrollView>
+      </View>
 
       <NavBar navigation={navigation} />
     </View>
@@ -199,13 +201,24 @@ export default function Cronograma({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#770B1C',
   },
 
   header: {
     backgroundColor: '#770B1C',
     padding: 20,
     alignItems: 'center',
+  },
+
+  conteudo: {
+    flex: 1,
+    backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: -6,
+    paddingHorizontal: 10,
+    paddingTop: 18,
+    paddingBottom: 10,
   },
 
   tituloHeader: {
