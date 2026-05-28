@@ -160,7 +160,7 @@ export default function ListaMonitorias() {
             <View style={styles.containerInfo}>
               <Text style={styles.titulo}>{item.titulo}</Text>
 
-              <Text style={styles.descricao}>{item.descricao}</Text>
+              {/* <Text style={styles.descricao}>{item.descricao}</Text> */}
 
         
               <Text style={styles.descricao}>
