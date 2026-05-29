@@ -8,9 +8,13 @@ import CaixaInform from '../components/CaixaInform';
 import Header from '../components/header';
 import NavBar from '../components/Navbar';
 import defaultAvatar from '../assets/psi.jpg';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
+
 
 export default function Perfil({ navigation }) {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [usuario, setUsuario] = useState(null);
   const [avatar, setAvatar] = useState(null);
@@ -67,10 +71,11 @@ export default function Perfil({ navigation }) {
       <View style={styles.profileCard}>
         <View style={styles.containerAvatar}>
           <View style={styles.avatarCircle}>
-            <Image
+            {/* <Image
               source={avatar ? { uri: avatar } : defaultAvatar}
               style={styles.avatar}
-            />
+            /> */}
+            <Feather name="user" size={50} color="#000" />
           </View>
 
           <Text style={styles.nomeUsuario}>
@@ -83,12 +88,30 @@ export default function Perfil({ navigation }) {
         <View style={styles.containerBotoes}>
           <BotaoPadrao
             title="Histórico Monitorias"
+            icon={
+              <Feather
+                name="clock"
+                size={22}
+                color="#FFF"
+              />
+            }
             onPress={() => navigation.navigate('HistoricoMonitorias')}
           />
 
           <BotaoPadrao
             title="Configuração"
-            onPress={() => navigation.navigate('Conf')}
+            icon={
+              <Feather
+                name="settings"
+                size={22}
+                color="#FFF"
+              />
+            }
+            onPress={() =>
+              navigation.navigate('Conf', {
+                nomeUsuario: nome,
+              })
+            }
           />
         </View>
       </View>
@@ -141,7 +164,10 @@ const styles = StyleSheet.create({
 
   containerBotoes: {
     marginTop: 5,
-    gap: 5,
+    gap: 15,
+    height: 300,
+
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

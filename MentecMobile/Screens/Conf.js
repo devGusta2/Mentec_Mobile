@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Feather } from '@expo/vector-icons';
 import NavBar from "../components/Navbar";
 import OptionCard from "../components/OptionCard";
 import AvatarModal from "../components/AvatarModal";
@@ -41,7 +41,8 @@ const fonteEscala = {
   grande: 1.18,
 };
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen({ navigation, route }) {
+  const nomeUsuario = route?.params?.nomeUsuario || 'Usuário';
   const [avatar, setAvatar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [configModal, setConfigModal] = useState(null);
@@ -387,14 +388,17 @@ export default function ProfileScreen({ navigation }) {
           style={styles.avatarWrapper}
           onPress={() => setModalVisible(true)}
         >
-          <Image
-            source={avatar ? { uri: avatar } : defaultAvatar}
-            style={styles.avatar}
+          <Feather
+            name="user"
+            size={45}
+            color="#800010"
           />
         </TouchableOpacity>
 
         <View>
-          <Text style={[styles.name, textSize.name]}>Paulo Henrique</Text>
+          <Text style={[styles.name, textSize.name]}>
+            {nomeUsuario}
+          </Text>
           <Text style={[styles.company, textSize.company]}>Mentec</Text>
         </View>
       </View>
@@ -487,6 +491,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#D9D9D9",
     marginRight: 20,
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
   },
 
   avatar: {
