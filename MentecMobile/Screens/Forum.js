@@ -4,6 +4,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image,
 
 import { Ionicons } from '@expo/vector-icons';
 
+import Header from '../components/header';
 import NavBar from '../components/Navbar';
 
 import axios from 'axios';
@@ -153,12 +154,8 @@ export default function Forum({ navigation }) {
 
     <View style={styles.container}>
 
-      <View style={styles.header}>
-        <Text style={styles.logoMentec}>Mentec</Text>
-        <Text style={styles.headerTitulo}>Fórum</Text>
-      </View>
+      <Header titulo="Fórum" />
 
-      <View style={styles.conteudo}>
       <ScrollView contentContainerStyle={styles.content}>
 
         <Text style={styles.title}>
@@ -277,7 +274,6 @@ export default function Forum({ navigation }) {
         ))}
 
       </ScrollView>
-      </View>
 
       <TouchableOpacity
         style={styles.fab}
@@ -360,43 +356,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#770B1C',
-  },
-
-  header: {
-    backgroundColor: '#770B1C',
-    width: '100%',
-    minHeight: 170,
-    alignItems: 'center',
-    borderBottomLeftRadius: 45,
-    borderBottomRightRadius: 45,
-    paddingTop: 22,
-  },
-
-  logoMentec: {
-    color: 'white',
-    alignSelf: 'flex-end',
-    paddingRight: 20,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-
-  headerTitulo: {
-    color: 'white',
-    fontSize: 30,
-    fontWeight: '400',
-    textAlign: 'center',
-    marginTop: 30,
-  },
-
-  conteudo: {
-    flex: 1,
-    backgroundColor: '#E5E5E5',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    marginTop: -34,
-    paddingTop: 10,
-    overflow: 'hidden',
+    backgroundColor: '#f4f4f4',
   },
 
   content: {
@@ -405,10 +365,9 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 0,
-    textAlign: 'center',
+    marginTop: 10,
   },
 
   subtitle: {
@@ -416,7 +375,6 @@ const styles = StyleSheet.create({
     color: '#555',
     marginTop: 10,
     lineHeight: 20,
-    textAlign: 'center',
   },
 
   searchContainer: {

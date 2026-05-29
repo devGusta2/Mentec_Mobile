@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  Platform
 } from 'react-native';
 
 import NavBar from '../components/Navbar';
@@ -155,11 +156,17 @@ export default function HistoricoMonitorias({ navigation }) {
 
     hoje.setHours(0, 0, 0, 0);
     inicio.setHours(0, 0, 0, 0);
-    fim.setHours(0, 0, 0, 0);
+    fim.setHours(23, 59, 59, 999);
 
     if (hoje < inicio) {
       return "AGENDADA";
     }
+
+    if (hoje > fim) {
+      return "CONCLUIDA";
+    }
+
+    return "EM_ANDAMENTO";
   };
 
   const abrirMaterial = async (linkMaterial) => {
@@ -210,7 +217,25 @@ export default function HistoricoMonitorias({ navigation }) {
       );
     }
   };
+  const abas = [
+    { status: "AGENDADA", label: "Agendadas" },
+    { status: "EM_ANDAMENTO", label: "Em andamento" },
+    { status: "CONCLUIDA", label: "Concluídas" },
+  ];
 
+  const historicoFiltrado = historico.filter(
+    (item) => getStatus(item.dataInicio, item.dataFim) === abaAtiva
+  );
+
+  const abaSelecionada = abas.find(
+    (aba) => aba.status === abaAtiva
+  );
+
+  const contarPorStatus = (status) => {
+    return historico.filter(
+      (item) => getStatus(item.dataInicio, item.dataFim) === status
+    ).length;
+  };
   return (
     <View style={styles.containerTela}>
 
