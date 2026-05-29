@@ -46,6 +46,31 @@ export default function Cronograma({ navigation }) {
     fetchCronograma();
   }, []);
 
+  const registrarAcessoAula = async (aulaId) => {
+    try {
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+      await axios.post(
+        `${API_URL}/frequencia/registrar`,
+        {
+          idAula: aulaId,
+          idAluno: idUser,
+        },
+        {
+          headers: { Authorization: `Bearer ${TOKEN}` },
+        }
+      );
+    } catch (e) {
+      console.log('Erro ao registrar acesso da aula', e);
+    }
+  };
+
+  const acessarAula = async (item) => {
+    await registrarAcessoAula(item.aulaId);
+    Linking.openURL(item.link || "https://teams.microsoft.com/");
+  };
+
   const markedDates = {};
 
   agendamentos.forEach((item) => {
@@ -76,6 +101,7 @@ export default function Cronograma({ navigation }) {
         <Text style={styles.tituloHeader}>Cronograma</Text>
       </View>
 
+      <View style={styles.conteudo}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
         <Calendar
@@ -170,6 +196,7 @@ export default function Cronograma({ navigation }) {
           )
         )}
       </ScrollView>
+      </View>
 
       <NavBar navigation={navigation} />
     </View>
@@ -179,13 +206,24 @@ export default function Cronograma({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#770B1C',
   },
 
   header: {
     backgroundColor: '#770B1C',
     padding: 20,
     alignItems: 'center',
+  },
+
+  conteudo: {
+    flex: 1,
+    backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: -6,
+    paddingHorizontal: 10,
+    paddingTop: 18,
+    paddingBottom: 10,
   },
 
   tituloHeader: {

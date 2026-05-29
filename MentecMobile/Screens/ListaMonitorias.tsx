@@ -25,8 +25,8 @@ type Monitoria = {
   id: number;
   titulo: string;
   descricao: string;
-  horario: string;
-  data: string;
+  horario?: string;
+  data?: string;
   monitor: Monitor;
 };
 
@@ -116,6 +116,27 @@ export default function ListaMonitorias() {
     return conteudoPesquisavel.includes(termo);
   });
 
+  const formatarData = (dataMonitoria?: string) => {
+    if (!dataMonitoria) {
+      return 'A definir';
+    }
+
+    const [ano, mes, dia] = dataMonitoria.split('-');
+    if (!ano || !mes || !dia) {
+      return dataMonitoria;
+    }
+
+    return `${dia}/${mes}/${ano}`;
+  };
+
+  const formatarHorario = (horario?: string) => {
+    if (!horario) {
+      return 'A definir';
+    }
+
+    return horario.slice(0, 5);
+  };
+
   return (
     <View style={styles.tela}>
       <StatusBar style="light" />
@@ -125,7 +146,8 @@ export default function ListaMonitorias() {
         <Text style={styles.logoMentec}>Mentec</Text>
       </View>
 
- 
+      <View style={styles.conteudo}>
+
       <View style={styles.buscaEnv}>
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={22} color="#000" />
@@ -168,15 +190,15 @@ export default function ListaMonitorias() {
               </Text>
 
               <Text style={styles.descricao}>
-                Especialidade: {item.monitor?.especialidades}
-              </Text>
-
-              <Text style={styles.descricao}>
-                Horário: {item.horario}
+                Disciplina: {item.monitor?.especialidades}
               </Text>
 
               <Text style={styles.data}>
-                Data: {item.data}
+                Data: {formatarData(item.data)}
+              </Text>
+
+              <Text style={styles.descricao}>
+                Horário: {formatarHorario(item.horario)}
               </Text>
 
               <Pressable
@@ -196,6 +218,8 @@ export default function ListaMonitorias() {
         ))}
       </ScrollView>
 
+      </View>
+
       <NavBar />
     </View>
   );
@@ -204,14 +228,14 @@ export default function ListaMonitorias() {
 const styles = StyleSheet.create({
   tela: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#770B1C',
   },
 
   faixaTopo: {
     backgroundColor: '#770B1C',
     paddingHorizontal: 16,
-    paddingBottom: 14,
-    minHeight: 64,
+    paddingBottom: 22,
+    minHeight: 92,
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
@@ -222,9 +246,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
+  conteudo: {
+    flex: 1,
+    backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: -10,
+    paddingHorizontal: 4,
+    paddingTop: 18,
+    paddingBottom: 10,
+  },
+
   buscaEnv: {
     paddingHorizontal: 12,
-    paddingTop: 12,
+    paddingTop: 0,
   },
 
   searchContainer: {
@@ -290,8 +325,9 @@ const styles = StyleSheet.create({
   },
 
   data: {
-    fontSize: 12,
-    color: '#202020',
+    fontSize: 13,
+    color: '#1f1f1f',
+    marginVertical: 4,
   },
 
   botao: {
