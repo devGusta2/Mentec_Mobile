@@ -39,7 +39,7 @@ export default function Forum({ navigation }) {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
 
       const response = await axios.get(
-        `${API_URL}/topicos/listar`,
+        `${API_URL}/topicos/listarSeguro`,
         {
           headers: {
             Authorization: `Bearer ${TOKEN}`,
@@ -199,7 +199,7 @@ export default function Forum({ navigation }) {
               </View>
 
               <Text style={styles.userName}>
-                Comunidade Mentec
+                {topico.criador}
               </Text>
 
             </View>
