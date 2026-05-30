@@ -82,13 +82,13 @@ export default function LoginScreen({ navigation}) {
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.microsoftButton}
         onPress={handleMicrosoftLogin}
       >
         <Image style={{ height: 25, width: 25 }} source={msIcon} />
         <Text style={styles.microsoftText}>Entrar com Microsoft</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

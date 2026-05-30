@@ -133,12 +133,12 @@ export default function Cadastro({ navigation }) {
           <Text style={styles.btn_text}>Cadastrar</Text>
         </TouchableOpacity>
 
-        <Text style={{ color: 'white' }}>Ou</Text>
+        {/* <Text style={{ color: 'white' }}>Ou</Text> */}
 
-        <TouchableOpacity style={styles.btn_cad_microsoft}>
+        {/* <TouchableOpacity style={styles.btn_cad_microsoft}>
           <Image style={styles.ms_icon} source={msIcon} />
           <Text>Cadastrar-se com Microsoft</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
