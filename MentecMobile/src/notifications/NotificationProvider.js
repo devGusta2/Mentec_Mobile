@@ -11,7 +11,7 @@ import { subscribeToNotifications } from './NotificationBus';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export const NotificationContext = createContext(undefined);
 
-const DEFAULT_DURATION = 4000;
+const DEFAULT_DURATION = 6000;
 const MAX_VISIBLE = 3;
 
 export function NotificationProvider({ children }) {

@@ -125,23 +125,26 @@ const styles = StyleSheet.create({
     maxWidth: 520,
   },
   card: {
+    marginTop:10,
     flexDirection: 'row',
-    alignItems: 'stretch',
+    alignItems: 'center',
     borderWidth: 1,
     borderRadius: 18,
     overflow: 'hidden',
+    minHeight: 150,
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 8 },
     elevation: 6,
+    
   },
   accent: {
     width: 6,
   },
   content: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 14,
   },
   title: {
