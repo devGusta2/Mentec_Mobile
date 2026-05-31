@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Image, Pressable, TextInput } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import NavBar from '../components/Navbar';
@@ -13,7 +13,6 @@ import {
   mostrarAlertaSempre,
 } from '../Utils/notificacoes';
 import { getApiUrl } from '../Utils/AuthRequestProvider';
-
 
 type Monitor = {
   nome: string;
@@ -33,7 +32,7 @@ type Monitoria = {
 export default function ListaMonitorias() {
   const API_URL = getApiUrl();
 
-  const [data, setData] = useState<Monitoria[]>([]); 
+  const [data, setData] = useState<Monitoria[]>([]);
   const [pesquisa, setPesquisa] = useState('');
 
   const insets = useSafeAreaInsets();
@@ -41,7 +40,6 @@ export default function ListaMonitorias() {
 
   const matricular = async (monitoriaId: number) => {
     try {
-    
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
       const idUser = await AsyncStorage.getItem('@mentec_userid');
 
@@ -57,10 +55,10 @@ export default function ListaMonitorias() {
       });
 
       await adicionarAoHistorico('Monitoria agendada', 'Agendamento confirmado');
- mostrarAlertaSempre(
-  'Sucesso',
-  'Agendamento efetuado com sucesso!'
-);
+      mostrarAlertaSempre(
+        'Sucesso',
+        'Agendamento efetuado com sucesso!'
+      );
     } catch (e: any) {
       console.log(e);
       mostrarAlertaSempre(
@@ -69,7 +67,6 @@ export default function ListaMonitorias() {
       );
     }
   };
-
 
   const fetchMonitorias = async () => {
     try {
@@ -116,12 +113,13 @@ export default function ListaMonitorias() {
     return conteudoPesquisavel.includes(termo);
   });
 
-  const formatarData = (dataMonitoria?: string) => {
+  const formatarData = (dataMonitoria?: string | null) => {
     if (!dataMonitoria) {
       return 'A definir';
     }
 
     const [ano, mes, dia] = dataMonitoria.split('-');
+
     if (!ano || !mes || !dia) {
       return dataMonitoria;
     }
@@ -129,7 +127,7 @@ export default function ListaMonitorias() {
     return `${dia}/${mes}/${ano}`;
   };
 
-  const formatarHorario = (horario?: string) => {
+  const formatarHorario = (horario?: string | null) => {
     if (!horario) {
       return 'A definir';
     }
@@ -141,83 +139,72 @@ export default function ListaMonitorias() {
     <View style={styles.tela}>
       <StatusBar style="light" />
 
-   
       <View style={[styles.faixaTopo, { paddingTop: insets.top }]}>
         <Text style={styles.logoMentec}>Mentec</Text>
       </View>
 
       <View style={styles.conteudo}>
+        <View style={styles.buscaEnv}>
+          <View style={styles.searchContainer}>
+            <Ionicons name="search" size={22} color="#000" />
 
-      <View style={styles.buscaEnv}>
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={22} color="#000" />
-
-          <TextInput
-            placeholder="Pesquisar monitoria..."
-            style={styles.searchInput}
-            value={pesquisa}
-            onChangeText={setPesquisa}
-          />
-        </View>
-      </View>
-
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingBottom: paddingBottomLista },
-        ]}
-      >
-        <Text style={styles.secaoTitulo}>
-          Monitorias que podem lhe interessar:
-        </Text>
-
-        {monitoriasFiltradas.length === 0 ? (
-          <Text style={styles.semResultados}>
-            Nenhuma monitoria encontrada
-          </Text>
-        ) : monitoriasFiltradas.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <View style={styles.containerInfo}>
-              <Text style={styles.titulo}>{item.titulo}</Text>
-
-              {/* <Text style={styles.descricao}>{item.descricao}</Text> */}
-
-        
-              <Text style={styles.descricao}>
-                Monitor: {item.monitor?.nome} {item.monitor?.sobrenome}
-              </Text>
-
-              <Text style={styles.descricao}>
-                Disciplina: {item.monitor?.especialidades}
-              </Text>
-
-              <Text style={styles.data}>
-                Data: {formatarData(item.data)}
-              </Text>
-
-              <Text style={styles.descricao}>
-                Horário: {formatarHorario(item.horario)}
-              </Text>
-
-              <Pressable
-                style={styles.botao}
-                onPress={() => matricular(item.id)}
-              >
-                <Text style={styles.textoBotao}>Agendar</Text>
-              </Pressable>
-            </View>
-
-            <Image
-              source={require('../assets/monitoria1.jpg')}
-              style={styles.imagem}
-              resizeMode="cover"
+            <TextInput
+              placeholder="Pesquisar monitoria..."
+              style={styles.searchInput}
+              value={pesquisa}
+              onChangeText={setPesquisa}
             />
           </View>
-        ))}
-      </ScrollView>
+        </View>
 
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingBottom: paddingBottomLista },
+          ]}
+        >
+          <Text style={styles.secaoTitulo}>
+            Monitorias que podem lhe interessar:
+          </Text>
+
+          {monitoriasFiltradas.length === 0 ? (
+            <Text style={styles.semResultados}>
+              Nenhuma monitoria encontrada
+            </Text>
+          ) : monitoriasFiltradas.map((item) => (
+            <View key={item.id} style={styles.card}>
+              <View style={styles.containerInfo}>
+                <Text style={styles.titulo}>{item.titulo}</Text>
+
+                <Text style={styles.descricao}>
+                  Monitor: {item.monitor?.nome} {item.monitor?.sobrenome}
+                </Text>
+
+                <Text style={styles.descricao}>
+                  Disciplina: {item.monitor?.especialidades}
+                </Text>
+
+                <View style={styles.infoLinha}>
+                  <Text style={styles.data}>
+                    Data: {formatarData(item.data)}
+                  </Text>
+
+                  <Text style={styles.descricao}>
+                    Horário: {formatarHorario(item.horario)}
+                  </Text>
+                </View>
+
+                <Pressable
+                  style={styles.botao}
+                  onPress={() => matricular(item.id)}
+                >
+                  <Text style={styles.textoBotao}>Agendar</Text>
+                </Pressable>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
 
       <NavBar />
@@ -298,18 +285,18 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 12,
     marginBottom: 10,
     overflow: 'hidden',
     elevation: 3,
+    borderLeftWidth: 5,
+    borderLeftColor: '#770B1C',
   },
 
   containerInfo: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'space-between',
+    padding: 12,
+    gap: 6,
   },
 
   titulo: {
@@ -321,32 +308,35 @@ const styles = StyleSheet.create({
   descricao: {
     fontSize: 13,
     color: '#1f1f1f',
-    marginVertical: 4,
+    marginVertical: 2,
   },
 
   data: {
     fontSize: 13,
     color: '#1f1f1f',
-    marginVertical: 4,
+    marginVertical: 2,
+  },
+
+  infoLinha: {
+    backgroundColor: '#F7ECEE',
+    borderRadius: 8,
+    marginTop: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
 
   botao: {
     marginTop: 8,
     backgroundColor: '#770B1C',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 14,
     borderRadius: 8,
-    alignSelf: 'flex-start',
+    alignSelf: 'flex-end',
   },
 
   textoBotao: {
     color: '#fff',
     fontSize: 11,
     fontWeight: 'bold',
-  },
-
-  imagem: {
-    width: 100,
-    height: '100%',
   },
 });
