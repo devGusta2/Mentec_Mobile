@@ -110,7 +110,7 @@ export default function Feedback({ route }) {
 
     try {
       setEnviando(true);
-
+            console.log(feedbackDTO)
       await axios.post(`${API_URL}/feedback/enviar`, feedbackDTO, {
         headers: {
           Authorization: `Bearer ${TOKEN}`,

@@ -36,7 +36,7 @@ export default function HistoricoMonitorias({ navigation }) {
           headers: { Authorization: `Bearer ${TOKEN}` }
         }
       );
-
+      console.log(response.data)
       const historicoComFeedback = await Promise.all(
         response.data.map(async (item) => {
           try {
