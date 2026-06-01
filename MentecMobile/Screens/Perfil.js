@@ -69,53 +69,53 @@ export default function Perfil({ navigation }) {
       <Header titulo="Perfil" />
 
       <View style={styles.conteudo}>
-      <View style={styles.profileCard}>
-        <View style={styles.containerAvatar}>
-          <View style={styles.avatarCircle}>
-            {/* <Image
+        <View style={styles.profileCard}>
+          <View style={styles.containerAvatar}>
+            <View style={styles.avatarCircle}>
+              {/* <Image
               source={avatar ? { uri: avatar } : defaultAvatar}
               style={styles.avatar}
             /> */}
-            <Feather name="user" size={50} color="#000" />
+              <Feather name="user" size={50} color="#000" />
+            </View>
+
+            <Text style={styles.nomeUsuario}>
+              {loading ? 'Carregando...' : nome || 'Nome não informado'}
+            </Text>
           </View>
 
-          <Text style={styles.nomeUsuario}>
-            {loading ? 'Carregando...' : nome || 'Nome não informado'}
-          </Text>
+          <CaixaInform email={email} telefone={telefone} />
+
+          <View style={styles.containerBotoes}>
+            <BotaoPadrao
+              title="Histórico Monitorias"
+              icon={
+                <Feather
+                  name="clock"
+                  size={22}
+                  color="#FFF"
+                />
+              }
+              onPress={() => navigation.navigate('HistoricoMonitorias')}
+            />
+
+            <BotaoPadrao
+              title="Configuração"
+              icon={
+                <Feather
+                  name="settings"
+                  size={22}
+                  color="#FFF"
+                />
+              }
+              onPress={() =>
+                navigation.navigate('Conf', {
+                  nomeUsuario: nome,
+                })
+              }
+            />
+          </View>
         </View>
-
-        <CaixaInform email={email} telefone={telefone} />
-
-        <View style={styles.containerBotoes}>
-          <BotaoPadrao
-            title="Histórico Monitorias"
-            icon={
-              <Feather
-                name="clock"
-                size={22}
-                color="#FFF"
-              />
-            }
-            onPress={() => navigation.navigate('HistoricoMonitorias')}
-          />
-
-          <BotaoPadrao
-            title="Configuração"
-            icon={
-              <Feather
-                name="settings"
-                size={22}
-                color="#FFF"
-              />
-            }
-            onPress={() =>
-              navigation.navigate('Conf', {
-                nomeUsuario: nome,
-              })
-            }
-          />
-        </View>
-      </View>
       </View>
 
       <NavBar navigation={navigation} />
@@ -173,13 +173,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     maxWidth: 180,
   },
-
   containerBotoes: {
-    marginTop: 5,
-    gap: 15,
-    height: 300,
-
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginTop: 20,
   },
 });

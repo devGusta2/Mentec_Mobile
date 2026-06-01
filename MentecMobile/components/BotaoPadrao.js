@@ -21,7 +21,7 @@ export default function BotaoPadrao({
 
 const styles = StyleSheet.create({
   containerBotao: {
-    width: 270,
+
     height: 70,
   },
 
@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     justifyContent: 'center',
     paddingHorizontal: 18,
-
     elevation: 3,
-    shadowColor: '#000',
+    width:170,
+    shadowColor: '#0f0202',
     shadowOpacity: 0.12,
     shadowRadius: 3,
     shadowOffset: { width: 0, height: 2 },

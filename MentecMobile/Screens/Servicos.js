@@ -11,9 +11,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { AuthContext } from '../contexts/AuthContext';
 import { useContext } from 'react';
+import useNotification from '../src/notifications/useNotification';
 export default function Servicos() {
   const navigation = useNavigation();
-   const { logout } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
+  const { notify } = useNotification();
   
     const handleLogout = async () => {
       await logout();
@@ -61,6 +63,18 @@ export default function Servicos() {
           titulo="SAC"
           onPress={() => navigation.navigate('SAC')}
           imagem={<MaterialIcons name="contact-support" size={60} color="#fff" />}
+        />
+
+        <BotaoMenu
+          titulo="Teste Notif."
+          onPress={() =>
+            notify({
+              title: 'Teste de notificação',
+              body: 'Se você está vendo isso, o sistema in-app está funcionando.',
+              type: 'success',
+            })
+          }
+          imagem={<MaterialIcons name="notifications-active" size={60} color="#fff" />}
         />
 
 
