@@ -65,7 +65,7 @@ export default function Servicos() {
           imagem={<MaterialIcons name="contact-support" size={60} color="#fff" />}
         />
 
-        <BotaoMenu
+        {/* <BotaoMenu
           titulo="Teste Notif."
           onPress={() =>
             notify({
@@ -75,7 +75,7 @@ export default function Servicos() {
             })
           }
           imagem={<MaterialIcons name="notifications-active" size={60} color="#fff" />}
-        />
+        /> */}
 
 
       </View>
