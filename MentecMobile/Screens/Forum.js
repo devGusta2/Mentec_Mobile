@@ -15,10 +15,11 @@ import {
   mostrarAlerta,
   mostrarAlertaSempre,
 } from '../Utils/notificacoes';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 export default function Forum({ navigation }) {
 
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [topicos, setTopicos] = useState([]);
 
@@ -38,7 +39,7 @@ export default function Forum({ navigation }) {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
 
       const response = await axios.get(
-        `${API_URL}/topicos/listar`,
+        `${API_URL}/topicos/listarSeguro`,
         {
           headers: {
             Authorization: `Bearer ${TOKEN}`,
@@ -60,13 +61,12 @@ export default function Forum({ navigation }) {
   }, []);
 
   const criarTopico = async () => {
-
     try {
 
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
       const idUser = await AsyncStorage.getItem('@mentec_userid');
 
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/topicos/criar`,
         {
           titulo,
@@ -80,21 +80,68 @@ export default function Forum({ navigation }) {
         }
       );
 
-      await adicionarAoHistorico('Novo tópico', titulo);
-      await mostrarAlerta('Sucesso', 'Tópico criado com sucesso!', CATEGORIAS.FORUM);
+      console.log('Resposta:', response.data);
 
+      const status = response.data.status;
+
+      await adicionarAoHistorico(
+        'Novo tópico',
+        titulo
+      );
+
+      // Fecha e limpa o modal
       setTitulo('');
       setDescricao('');
-
       setModalVisible(false);
 
-      fetchTopicos();
+      if (status === 'SEGURO') {
+
+        await mostrarAlerta(
+          'Sucesso',
+          'Tópico publicado com sucesso!',
+          CATEGORIAS.FORUM
+        );
+
+        fetchTopicos();
+
+      } else if (status === 'SUSPEITO') {
+
+        await mostrarAlerta(
+          'Em análise',
+          'Seu tópico foi enviado para análise da moderação.',
+          CATEGORIAS.FORUM
+        );
+
+      } else if (status === 'PERIGOSO') {
+
+        await mostrarAlertaSempre(
+          'Conteúdo bloqueado',
+          'Seu tópico foi removido por violar as políticas da plataforma.'
+        );
+
+      } else {
+
+        // Caso o backend não esteja retornando status
+        await mostrarAlerta(
+          'Sucesso',
+          'Tópico enviado.',
+          CATEGORIAS.FORUM
+        );
+
+        fetchTopicos();
+      }
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        'Erro ao criar tópico:',
+        error?.response?.data || error
+      );
 
-      mostrarAlertaSempre('Erro', 'Não foi possível criar o tópico');
+      mostrarAlertaSempre(
+        'Erro',
+        'Não foi possível criar o tópico'
+      );
 
     }
   };
@@ -106,13 +153,7 @@ export default function Forum({ navigation }) {
       const TOKEN = await AsyncStorage.getItem('@mentec_token');
       const usuario = await AsyncStorage.getItem('@mentec_userid');
 
-      console.log({
-      comentario: comentarios[idTopico],
-      usuario,
-      topico: idTopico,
-      });
-
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/topicos/comentar`,
         {
           comentario: comentarios[idTopico],
@@ -126,21 +167,67 @@ export default function Forum({ navigation }) {
         }
       );
 
+      console.log('Resposta comentário:', response.data);
+
+      const status = response.data.status;
+
       setComentarios({
         ...comentarios,
         [idTopico]: '',
       });
 
-      await adicionarAoHistorico('Comentário publicado', 'No fórum');
-      await mostrarAlerta('Sucesso', 'Comentário enviado!', CATEGORIAS.FORUM);
+      if (status === 'SEGURO') {
 
-      fetchTopicos();
+        await adicionarAoHistorico(
+          'Comentário publicado',
+          'No fórum'
+        );
+
+        await mostrarAlerta(
+          'Sucesso',
+          'Comentário publicado com sucesso!',
+          CATEGORIAS.FORUM
+        );
+
+        fetchTopicos();
+
+      } else if (status === 'SUSPEITO') {
+
+        await mostrarAlerta(
+          'Em análise',
+          'Seu comentário foi enviado para análise da moderação.',
+          CATEGORIAS.FORUM
+        );
+
+      } else if (status === 'PERIGOSO') {
+
+        await mostrarAlertaSempre(
+          'Comentário bloqueado',
+          'Seu comentário foi removido por violar as políticas da plataforma.'
+        );
+
+      } else {
+
+        console.log('Status desconhecido:', status);
+
+        await mostrarAlerta(
+          'Comentário enviado',
+          'Seu comentário foi processado.',
+          CATEGORIAS.FORUM
+        );
+      }
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        'Erro ao comentar:',
+        error?.response?.data || error
+      );
 
-      mostrarAlertaSempre('Erro', 'Não foi possível comentar');
+      mostrarAlertaSempre(
+        'Erro',
+        'Não foi possível comentar'
+      );
 
     }
   };
@@ -198,7 +285,7 @@ export default function Forum({ navigation }) {
               </View>
 
               <Text style={styles.userName}>
-                Comunidade Mentec
+                {topico.criador}
               </Text>
 
             </View>
@@ -211,32 +298,24 @@ export default function Forum({ navigation }) {
               {topico.descricao}
             </Text>
 
-            {topico.mensagem?.length > 0 && (
-
+            {topico.mensagens?.length > 0 && (
               <View style={styles.commentsContainer}>
-
                 <Text style={styles.commentTitle}>
                   Comentários
                 </Text>
 
-                {topico.mensagem.map((msg, i) => (
-
+                {topico.mensagens.map((msg, i) => (
                   <View key={i} style={styles.commentBox}>
-
                     <Text style={styles.commentUser}>
-                      {msg.nome}
+                      {msg.usuario}
                     </Text>
 
                     <Text style={styles.commentText}>
                       {msg.mensagem}
                     </Text>
-
                   </View>
-
                 ))}
-
               </View>
-
             )}
 
             <View style={styles.commentInputContainer}>

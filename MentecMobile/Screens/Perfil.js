@@ -8,9 +8,13 @@ import CaixaInform from '../components/CaixaInform';
 import Header from '../components/header';
 import NavBar from '../components/Navbar';
 import defaultAvatar from '../assets/psi.jpg';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
+
 
 export default function Perfil({ navigation }) {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [usuario, setUsuario] = useState(null);
   const [avatar, setAvatar] = useState(null);
@@ -64,32 +68,53 @@ export default function Perfil({ navigation }) {
     <View style={styles.containerTela}>
       <Header titulo="Perfil" />
 
-      <View style={styles.profileCard}>
-        <View style={styles.containerAvatar}>
-          <View style={styles.avatarCircle}>
-            <Image
+      <View style={styles.conteudo}>
+        <View style={styles.profileCard}>
+          <View style={styles.containerAvatar}>
+            <View style={styles.avatarCircle}>
+              {/* <Image
               source={avatar ? { uri: avatar } : defaultAvatar}
               style={styles.avatar}
-            />
+            /> */}
+              <Feather name="user" size={50} color="#000" />
+            </View>
+
+            <Text style={styles.nomeUsuario}>
+              {loading ? 'Carregando...' : nome || 'Nome não informado'}
+            </Text>
           </View>
 
-          <Text style={styles.nomeUsuario}>
-            {loading ? 'Carregando...' : nome || 'Nome não informado'}
-          </Text>
-        </View>
+          <CaixaInform email={email} telefone={telefone} />
 
-        <CaixaInform email={email} telefone={telefone} />
+          <View style={styles.containerBotoes}>
+            <BotaoPadrao
+              title="Histórico Monitorias"
+              icon={
+                <Feather
+                  name="clock"
+                  size={22}
+                  color="#FFF"
+                />
+              }
+              onPress={() => navigation.navigate('HistoricoMonitorias')}
+            />
 
-        <View style={styles.containerBotoes}>
-          <BotaoPadrao
-            title="Histórico Monitorias"
-            onPress={() => navigation.navigate('HistoricoMonitorias')}
-          />
-
-          <BotaoPadrao
-            title="Configuração"
-            onPress={() => navigation.navigate('Conf')}
-          />
+            <BotaoPadrao
+              title="Configuração"
+              icon={
+                <Feather
+                  name="settings"
+                  size={22}
+                  color="#FFF"
+                />
+              }
+              onPress={() =>
+                navigation.navigate('Conf', {
+                  nomeUsuario: nome,
+                })
+              }
+            />
+          </View>
         </View>
       </View>
 
@@ -101,13 +126,23 @@ export default function Perfil({ navigation }) {
 const styles = StyleSheet.create({
   containerTela: {
     flex: 1,
+    backgroundColor: '#770B1C',
+  },
+
+  conteudo: {
+    flex: 1,
     backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: -18,
+    paddingHorizontal: 20,
+    paddingTop: 34,
+    paddingBottom: 16,
   },
 
   profileCard: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 10,
   },
 
   containerAvatar: {
@@ -138,10 +173,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     maxWidth: 180,
   },
-
   containerBotoes: {
-    marginTop: 5,
-    gap: 5,
-    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginTop: 20,
   },
 });

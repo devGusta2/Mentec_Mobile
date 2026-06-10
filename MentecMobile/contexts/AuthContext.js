@@ -1,7 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import { getApiUrl } from '../Utils/AuthRequestProvider';
+import { connectSocket, disconnectSocket } from '../src/services/socketManager';
 export const AuthContext = createContext({});
 
 
@@ -11,7 +12,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   
   async function loadUser() {
@@ -56,9 +57,13 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    navigation.navigate('Inicio'); 
-    await AsyncStorage.clear();
-    setUser(null);
+    try {
+      await AsyncStorage.clear();
+      disconnectSocket();
+      setUser(null);
+    } catch (e) {
+      console.log('Logout error', e);
+    }
   }
 
 
@@ -79,6 +84,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     loadUser();
   }, []);
+
+  useEffect(() => {
+    if (user?.userid) {
+      connectSocket(user.userid);
+      return;
+    }
+
+    disconnectSocket();
+  }, [user?.userid]);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading, requireAuth }}>

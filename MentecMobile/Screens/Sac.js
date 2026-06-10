@@ -19,6 +19,7 @@ import {
   mostrarAlerta,
   mostrarAlertaSempre,
 } from '../Utils/notificacoes';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 export default function SAC({ navigation }) {
 
@@ -26,7 +27,7 @@ export default function SAC({ navigation }) {
   const [descricao, setDescricao] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
 
   const handleEnviar = async () => {

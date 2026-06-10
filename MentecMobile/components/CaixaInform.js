@@ -5,12 +5,20 @@ export default function CaixaInform({ email, telefone }) {
     <View style={styles.containerCaixa}>
       <View style={styles.textoContainer}>
         <Text style={styles.titulo}>Informações</Text>
-        <Text style={styles.descricao}>
-          E-mail: {email || 'Não informado'}
-        </Text>
-        <Text style={styles.descricao}>
-          Telefone: {telefone || 'Não informado'}
-        </Text>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.label}>E-mail</Text>
+          <Text style={styles.valor}>
+            {email || 'Não informado'}
+          </Text>
+        </View>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.label}>Telefone</Text>
+          <Text style={styles.valor}>
+            {telefone || 'Não informado'}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -18,34 +26,53 @@ export default function CaixaInform({ email, telefone }) {
 
 const styles = StyleSheet.create({
   containerCaixa: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     width: 300,
-    height: 100,
     alignSelf: 'center',
-    marginVertical: 5,
-    borderRadius: 10,
-    overflow: 'hidden',
-    elevation: 3,
+    marginVertical: 8,
+    borderRadius: 16,
+    paddingVertical: 10,
+
+    elevation: 4,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 1,
+    shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
   },
+
   textoContainer: {
-    flex: 1,
-    padding: 15,
-    justifyContent: 'space-between',
+    padding: 18,
   },
+
   titulo: {
-    color: 'black',
+    color: '#111',
     fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 5,
+    fontSize: 22,
+    marginBottom: 20,
   },
-  descricao: {
-    color: 'black',
-    fontSize: 11,
-    marginBottom: 15,
+
+  infoBox: {
+    backgroundColor: '#F5F7FA',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 14,
+
+    borderLeftWidth: 4,
+    borderLeftColor: '#770B1C',
+  },
+
+  label: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#770B1C',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+
+  valor: {
+    fontSize: 14,
+    color: '#222',
+    fontWeight: '500',
   },
 });

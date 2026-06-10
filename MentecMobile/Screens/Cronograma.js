@@ -12,10 +12,11 @@ import NavBar from '../components/Navbar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registrarLembretesMonitoria } from '../Utils/notificacoes';
+import { getApiUrl } from '../Utils/AuthRequestProvider';
 
 export default function Cronograma({ navigation }) {
 
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const API_URL = getApiUrl();
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [agendamentos, setAgendamentos] = useState([]);
@@ -45,6 +46,31 @@ export default function Cronograma({ navigation }) {
     fetchCronograma();
   }, []);
 
+  const registrarAcessoAula = async (aulaId) => {
+    try {
+      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+      await axios.post(
+        `${API_URL}/frequencia/registrar`,
+        {
+          idAula: aulaId,
+          idAluno: idUser,
+        },
+        {
+          headers: { Authorization: `Bearer ${TOKEN}` },
+        }
+      );
+    } catch (e) {
+      console.log('Erro ao registrar acesso da aula', e);
+    }
+  };
+
+  const acessarAula = async (item) => {
+    await registrarAcessoAula(item.aulaId);
+    Linking.openURL(item.link || "https://teams.microsoft.com/");
+  };
+
   const markedDates = {};
 
   agendamentos.forEach((item) => {
@@ -67,6 +93,7 @@ export default function Cronograma({ navigation }) {
     (a) => a.data === selectedDate
   );
 
+
   return (
     <View style={styles.container}>
 
@@ -74,6 +101,7 @@ export default function Cronograma({ navigation }) {
         <Text style={styles.tituloHeader}>Cronograma</Text>
       </View>
 
+      <View style={styles.conteudo}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
         <Calendar
@@ -91,23 +119,72 @@ export default function Cronograma({ navigation }) {
           eventosDoDia.map((item, index) => (
             <View key={index} style={styles.card}>
 
-              <View>
-                <Text style={styles.titulo}>
-                  {item.titulo}
-                </Text>
-                <Text style={styles.horario}>
-                  {item.horario}
-                </Text>
-              </View>
+              <View style={styles.cardContent}>
 
-              <Pressable
-                style={styles.botao}
-                onPress={() =>
-                  Linking.openURL(item.link || "https://teams.microsoft.com/")
-                }
-              >
-                <Text style={styles.textBotao}>Entrar</Text>
-              </Pressable>
+                <View style={styles.topInfo}>
+                  <Text style={styles.monitoriaTitulo}>
+                    {item.tituloMonitoria}
+                  </Text>
+
+                  <Text style={styles.aulaTitulo}>
+                    {item.tituloAula}
+                  </Text>
+                </View>
+
+                <Text style={styles.descricao}>
+                  {item.descricaoAula}
+                </Text>
+
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Data:</Text>
+                  <Text style={styles.value}>{item.data}</Text>
+                </View>
+
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Horário:</Text>
+                  <Text style={styles.value}>
+                    {item.inicio} às {item.fim}
+                  </Text>
+                </View>
+
+                <Pressable
+                  style={styles.botao}
+                  onPress={async () => {
+
+                    try {
+
+                      const TOKEN = await AsyncStorage.getItem('@mentec_token');
+                      const idUser = await AsyncStorage.getItem('@mentec_userid');
+
+                      await axios.post(
+                        `${API_URL}/frequencia/registrar`,
+                        {
+                          idAula: item.aulaId,
+                          idAluno: idUser
+                        },
+                        {
+                          headers: {
+                            Authorization: `Bearer ${TOKEN}`
+                          }
+                        }
+                      );
+
+                      await Linking.openURL(
+                        item.link || "https://teams.microsoft.com/"
+                      );
+
+                    } catch (error) {
+
+                      console.log("Erro ao registrar presença", error);
+                    }
+                  }}
+                >
+                  <Text style={styles.textBotao}>
+                    Entrar na Aula
+                  </Text>
+                </Pressable>
+
+              </View>
 
             </View>
           ))
@@ -119,6 +196,7 @@ export default function Cronograma({ navigation }) {
           )
         )}
       </ScrollView>
+      </View>
 
       <NavBar navigation={navigation} />
     </View>
@@ -128,13 +206,24 @@ export default function Cronograma({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#770B1C',
   },
 
   header: {
     backgroundColor: '#770B1C',
     padding: 20,
     alignItems: 'center',
+  },
+
+  conteudo: {
+    flex: 1,
+    backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: -6,
+    paddingHorizontal: 10,
+    paddingTop: 18,
+    paddingBottom: 10,
   },
 
   tituloHeader: {
@@ -188,5 +277,57 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     color: '#777',
+  },
+  cardContent: {
+    width: '100%',
+  },
+
+  topInfo: {
+    marginBottom: 10,
+  },
+
+  monitoriaTitulo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#770B1C',
+  },
+
+  aulaTitulo: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 2,
+  },
+
+  descricao: {
+    color: '#555',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+
+  infoRow: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+
+  label: {
+    fontWeight: 'bold',
+    marginRight: 5,
+  },
+
+  value: {
+    color: '#444',
+  },
+
+  botao: {
+    backgroundColor: '#770B1C',
+    marginTop: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  textBotao: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

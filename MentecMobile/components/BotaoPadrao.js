@@ -1,11 +1,19 @@
 import React from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 
-export default function BotaoPadrao({ title, onPress }) {
+export default function BotaoPadrao({
+  title,
+  onPress,
+  icon,
+}) {
   return (
     <View style={styles.containerBotao}>
       <Pressable style={styles.botao} onPress={onPress}>
-        <Text style={styles.text}>{title}</Text>
+        <View style={styles.content}>
+          {icon}
+
+          <Text style={styles.text}>{title}</Text>
+        </View>
       </Pressable>
     </View>
   );
@@ -13,24 +21,33 @@ export default function BotaoPadrao({ title, onPress }) {
 
 const styles = StyleSheet.create({
   containerBotao: {
-    width: 140,
-    height: 40,
+
+    height: 70,
   },
 
   botao: {
-    flex: 1, 
+    flex: 1,
     backgroundColor: '#770B1C',
-    borderRadius: 8,
-
-   
+    borderRadius: 14,
     justifyContent: 'center',
+    paddingHorizontal: 18,
+    elevation: 3,
+    width:170,
+    shadowColor: '#0f0202',
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 2 },
+  },
+
+  content: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
+    gap: 14,
   },
 
   text: {
     color: 'white',
-    textAlign: 'center',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

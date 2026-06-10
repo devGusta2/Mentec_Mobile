@@ -9,9 +9,18 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-
+import { AuthContext } from '../contexts/AuthContext';
+import { useContext } from 'react';
+import useNotification from '../src/notifications/useNotification';
 export default function Servicos() {
   const navigation = useNavigation();
+  const { logout } = useContext(AuthContext);
+  const { notify } = useNotification();
+  
+    const handleLogout = async () => {
+      await logout();
+      
+    };
 
   return (
     <View style={styles.containerTela}>
@@ -40,7 +49,7 @@ export default function Servicos() {
 
         <BotaoMenu
           titulo="Menu Inicial"
-          onPress={() => navigation.navigate('Inicio')}
+          onPress={handleLogout}
           imagem={<Ionicons name="home" size={60} color="#fff" />}
         />
 
@@ -55,6 +64,18 @@ export default function Servicos() {
           onPress={() => navigation.navigate('SAC')}
           imagem={<MaterialIcons name="contact-support" size={60} color="#fff" />}
         />
+
+        {/* <BotaoMenu
+          titulo="Teste Notif."
+          onPress={() =>
+            notify({
+              title: 'Teste de notificação',
+              body: 'Se você está vendo isso, o sistema in-app está funcionando.',
+              type: 'success',
+            })
+          }
+          imagem={<MaterialIcons name="notifications-active" size={60} color="#fff" />}
+        /> */}
 
 
       </View>
